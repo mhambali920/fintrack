@@ -69,22 +69,22 @@ export function LoginForm() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[#ffcf82]">
+        <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[var(--retro-accent)]">
           Sign in
         </p>
-        <h2 className="mt-2 text-3xl font-bold text-[#fff0ca]">
+        <h2 className="mt-2 text-3xl font-bold text-[var(--retro-text)]">
           Login or create an account
         </h2>
       </div>
 
-      <div className="inline-flex rounded-[18px] border-2 border-[#7f6241] bg-[#211710] p-1 shadow-[5px_5px_0_rgba(0,0,0,0.25)]">
+      <div className="inline-flex rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
         <button
           type="button"
           onClick={() => setMode("password")}
-          className={`rounded-[14px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+            className={`rounded-[14px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
             mode === "password"
-              ? "bg-[#ffb84d] text-[#20160f]"
-              : "text-[#d9c4a0] hover:text-[#fff0ca]"
+              ? "bg-[var(--retro-accent)] text-[var(--retro-ink)]"
+              : "text-[var(--retro-muted)] hover:text-[var(--retro-text)]"
           }`}
         >
           Password
@@ -92,10 +92,10 @@ export function LoginForm() {
         <button
           type="button"
           onClick={() => setMode("magic-link")}
-          className={`rounded-[14px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+            className={`rounded-[14px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
             mode === "magic-link"
-              ? "bg-[#ffb84d] text-[#20160f]"
-              : "text-[#d9c4a0] hover:text-[#fff0ca]"
+              ? "bg-[var(--retro-accent)] text-[var(--retro-ink)]"
+              : "text-[var(--retro-muted)] hover:text-[var(--retro-text)]"
           }`}
         >
           Magic Link
@@ -104,7 +104,7 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <label className="block">
-          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[#ffcf82]">
+          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
             Email
           </span>
           <input
@@ -112,14 +112,14 @@ export function LoginForm() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
-            className="w-full rounded-[16px] border-2 border-[#7f6241] bg-[#160f0a] px-4 py-3 text-[#fff0ca] outline-none transition placeholder:text-[#876f4e] focus:border-[#ffb84d]"
+            className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]"
             placeholder="nama@contoh.com"
           />
         </label>
 
         {mode === "password" ? (
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[#ffcf82]">
+            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
               Password
             </span>
             <input
@@ -127,12 +127,12 @@ export function LoginForm() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
-              className="w-full rounded-[16px] border-2 border-[#7f6241] bg-[#160f0a] px-4 py-3 text-[#fff0ca] outline-none transition placeholder:text-[#876f4e] focus:border-[#ffb84d]"
+              className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]"
               placeholder="Masukkan password"
             />
           </label>
         ) : (
-          <p className="rounded-[16px] border-2 border-[#7f6241] bg-[#241911] px-4 py-3 text-sm leading-6 text-[#d9c4a0]">
+          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
             Mode ini akan mengirim tautan masuk ke email kamu. Pastikan alamat
             email sudah benar.
           </p>
@@ -141,14 +141,14 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-[16px] border-2 border-[#6b4f31] bg-[#ffb84d] px-4 py-3 font-bold uppercase tracking-[0.14em] text-[#20160f] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_rgba(0,0,0,0.25)] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? "Processing..." : mode === "magic-link" ? "Send link" : "Continue"}
         </button>
       </form>
 
       {message ? (
-        <p className="rounded-[16px] border-2 border-[#7f6241] bg-[#1b130d] px-4 py-3 text-sm leading-6 text-[#d9c4a0]">
+        <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
           {message}
         </p>
       ) : null}

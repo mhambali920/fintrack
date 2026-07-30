@@ -24,26 +24,26 @@ export default function DashboardPage() {
           key={item.title}
           className="retro-panel rounded-[24px] p-6"
         >
-          <p className="relative z-10 text-sm font-semibold uppercase tracking-[0.22em] text-[#ffcf82]">
+          <p className="relative z-10 text-sm font-semibold uppercase tracking-[0.22em] text-[var(--retro-accent)]">
             {item.title}
           </p>
-          <h3 className="relative z-10 mt-3 text-2xl font-bold text-[#fff0ca]">
+          <h3 className="relative z-10 mt-3 text-2xl font-bold text-[var(--retro-text)]">
             {item.value}
           </h3>
-          <p className="relative z-10 mt-2 text-sm leading-6 text-[#c9b08b]">
+          <p className="relative z-10 mt-2 text-sm leading-6 text-[var(--retro-muted)]">
             {item.note}
           </p>
         </article>
       ))}
 
       <article className="retro-panel xl:col-span-3 rounded-[24px] p-6">
-        <p className="relative z-10 text-sm font-semibold uppercase tracking-[0.22em] text-[#ffcf82]">
+        <p className="relative z-10 text-sm font-semibold uppercase tracking-[0.22em] text-[var(--retro-accent)]">
           Next step
         </p>
-        <h3 className="relative z-10 mt-3 text-2xl font-bold text-[#fff0ca]">
+        <h3 className="relative z-10 mt-3 text-2xl font-bold text-[var(--retro-text)]">
           Fase 2 selesai, struktur navigasi siap.
         </h3>
-        <p className="relative z-10 mt-2 max-w-3xl text-sm leading-6 text-[#c9b08b]">
+        <p className="relative z-10 mt-2 max-w-3xl text-sm leading-6 text-[var(--retro-muted)]">
           Login page, proteksi middleware, dan shell dashboard sudah tersedia
           untuk fase berikutnya.
         </p>
