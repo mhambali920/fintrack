@@ -53,16 +53,8 @@ export default async function DashboardLayout({
             ))}
           </nav>
 
-          <div className="relative z-10 mt-6 rounded-[20px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-4 shadow-[5px_5px_0_var(--retro-shadow)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[var(--retro-accent)]">
-              Session active
-            </p>
-            <p className="mt-1 text-sm leading-6 text-[var(--retro-muted)]">
-              Akses data dashboard dilindungi oleh middleware Supabase.
-            </p>
-            <div className="mt-4">
-              <SignOutButton />
-            </div>
+          <div className="mt-4">
+            <SignOutButton />
           </div>
         </aside>
 

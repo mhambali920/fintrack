@@ -3,6 +3,9 @@ import { ArrowLeft, ArrowRight, Filter, PlusCircle, Trash2 } from "lucide-react"
 import { deleteTransactionFormAction } from "@/app/(dashboard)/actions";
 import { getTransactionsPage } from "@/lib/finance";
 import { TransactionItem } from "@/components/transaction-item";
+import { UiButton } from "@/components/ui/button";
+import { UiInput } from "@/components/ui/input";
+import { UiSelect } from "@/components/ui/select";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +14,11 @@ type TransactionsPageProps = {
 };
 
 const pageSize = 10;
+const filterTypeItems = [
+  { label: "All", value: "all" },
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
+] as const;
 
 function getStringParam(
   params: Record<string, string | string[] | undefined>,
@@ -126,35 +134,28 @@ export default async function TransactionsPage({
             <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
               Month
             </span>
-            <input
+            <UiInput
               type="month"
               name="month"
               defaultValue={month}
-              className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition focus:border-[var(--retro-accent)]"
+              className="w-full"
             />
           </label>
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-              Type
-            </span>
-            <select
-              name="type"
-              defaultValue={type}
-              className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition focus:border-[var(--retro-accent)]"
-            >
-              <option value="all">All</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </label>
+          <UiSelect
+            name="type"
+            label="Type"
+            defaultValue={type}
+            items={[...filterTypeItems]}
+          />
 
-          <button
+          <UiButton
             type="submit"
-            className="mt-auto inline-flex h-fit w-fit items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+            variant="primary"
+            className="mt-auto h-fit w-fit"
           >
             Apply filters
-          </button>
+          </UiButton>
         </div>
       </form>
 
@@ -168,13 +169,14 @@ export default async function TransactionsPage({
                 <div className="flex items-center justify-end">
                   <form action={deleteTransactionFormAction}>
                     <input type="hidden" name="id" value={transaction.id} />
-                    <button
+                    <UiButton
                       type="submit"
-                      className="inline-flex items-center gap-2 rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--retro-text)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+                      variant="secondary"
+                      className="rounded-[14px] px-3 py-2 text-xs"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                       Delete
-                    </button>
+                    </UiButton>
                   </form>
                 </div>
               }

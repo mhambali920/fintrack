@@ -11,6 +11,10 @@ import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { CategoryRecord, EntityType } from "@/lib/finance";
 import { createTransactionAction } from "@/app/(dashboard)/actions";
+import { UiButton } from "@/components/ui/button";
+import { UiInput } from "@/components/ui/input";
+import { UiSelect } from "@/components/ui/select";
+import { DatePickerField } from "@/components/ui/date-picker";
 
 type ActionState = {
   ok: boolean;
@@ -21,7 +25,14 @@ type TransactionFormProps = {
   initialCategories: CategoryRecord[];
 };
 
-const todayValue = new Date().toISOString().slice(0, 10);
+function todayValue() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
 
 const initialActionState: ActionState = {
   ok: false,
@@ -51,7 +62,7 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
     if (actionState.ok) {
       setAmount("");
       setDescription("");
-      setDate(todayValue);
+      setDate(todayValue());
       setClientError(null);
       router.refresh();
     }
@@ -139,18 +150,15 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
             const active = type === option;
 
             return (
-              <button
+              <UiButton
                 key={option}
                 type="button"
+                variant={active ? "primary" : "ghost"}
                 onClick={() => onTypeChange(option)}
-                className={`rounded-[14px] px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] transition ${
-                  active
-                    ? "bg-[var(--retro-accent)] text-[var(--retro-ink)]"
-                    : "text-[var(--retro-muted)] hover:text-[var(--retro-text)]"
-                }`}
+                className="rounded-[14px] px-4 py-2 text-xs shadow-none hover:shadow-none"
               >
                 {option}
-              </button>
+              </UiButton>
             );
           })}
         </div>
@@ -163,7 +171,7 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
           <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
             Amount
           </span>
-          <input
+          <UiInput
             name="amount"
             type="text"
             inputMode="decimal"
@@ -172,63 +180,50 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
               setAmount(event.currentTarget.value)
             }
             required
-            className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]"
+            className="w-full"
             placeholder="150000"
           />
         </label>
 
-        <label className="block">
-          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-            Date
-          </span>
-          <input
-            name="date"
-            type="date"
-            value={date}
-            onChange={(event) => setDate(event.currentTarget.value)}
-            required
-            className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition focus:border-[var(--retro-accent)]"
-          />
-        </label>
+        <DatePickerField
+          name="date"
+          label="Date"
+          value={date}
+          onValueChange={setDate}
+          placeholder="Pilih tanggal"
+        />
       </div>
 
       <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
-        <label className="block">
-          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-            Category
-          </span>
-          <select
+        <div className="space-y-2">
+          <UiSelect
             name="category_id"
+            label="Category"
             value={categoryId}
-            onChange={(event) => setCategoryId(event.currentTarget.value)}
-            className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition focus:border-[var(--retro-accent)]"
-          >
-            <option value="">
-              {isFetchingCategories ? "Loading categories..." : "Select category"}
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+            onValueChange={setCategoryId}
+            items={categories.map((category) => ({
+              label: category.name,
+              value: category.id,
+            }))}
+            placeholder={isFetchingCategories ? "Loading categories..." : "Select category"}
+          />
           {selectedCategory ? (
-            <p className="mt-2 text-xs uppercase tracking-[0.14em] text-[var(--retro-muted)]">
+            <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--retro-muted)]">
               {selectedCategory.type} category selected
             </p>
           ) : null}
-        </label>
+        </div>
 
         <label className="block">
           <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
             Description
           </span>
-          <input
+          <UiInput
             name="description"
             type="text"
             value={description}
             onChange={(event) => setDescription(event.currentTarget.value)}
-            className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]"
+            className="w-full"
             placeholder="Optional note"
           />
         </label>
@@ -254,13 +249,14 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
         ) : null}
       </div>
 
-      <button
+      <UiButton
         type="submit"
+        variant="primary"
         disabled={isPending}
-        className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] disabled:cursor-not-allowed disabled:opacity-70"
+        className="w-full"
       >
         {isPending ? "Saving..." : "Save transaction"}
-      </button>
+      </UiButton>
     </form>
   );
 }

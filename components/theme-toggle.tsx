@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme, type ThemePreference } from "@/components/theme-provider";
+import { UiButton } from "@/components/ui/button";
 
 const options: Array<{ value: ThemePreference; label: string }> = [
   { value: "dark", label: "Dark" },
@@ -17,19 +18,16 @@ export function ThemeToggle() {
         const active = theme === option.value;
 
         return (
-          <button
+          <UiButton
             key={option.value}
             type="button"
+            variant={active ? "primary" : "ghost"}
             onClick={() => setTheme(option.value)}
-            className={`rounded-[14px] px-3 py-2 text-xs font-bold uppercase tracking-[0.15em] transition sm:px-4 ${
-              active
-                ? "bg-[var(--retro-accent)] text-[var(--retro-ink)]"
-                : "text-[var(--retro-muted)] hover:text-[var(--retro-text)]"
-            }`}
+            className="rounded-[14px] px-3 py-2 text-xs shadow-none hover:shadow-none sm:px-4"
             aria-pressed={active}
           >
             {option.label}
-          </button>
+          </UiButton>
         );
       })}
 

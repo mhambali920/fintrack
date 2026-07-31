@@ -47,7 +47,7 @@ export default async function DashboardPage() {
 
         <Link
           href="/transactions/add"
-          className="inline-flex w-fit items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+          className="inline-flex w-fit items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] !text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
         >
           <PlusCircle className="h-4 w-4" />
           Add transaction
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
         <SummaryCard
           label="Total balance"
           value={formatCurrency(totalBalance)}
-          note="Saldo berdasarkan seluruh transaksi milik user"
+          note="Saldo berdasarkan seluruh transaksi"
           tone={totalBalance >= 0 ? "success" : "danger"}
         />
         <SummaryCard

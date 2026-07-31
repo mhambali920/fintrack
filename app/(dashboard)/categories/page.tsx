@@ -5,6 +5,9 @@ import {
   updateCategoryFormAction,
 } from "@/app/(dashboard)/actions";
 import { getAllCategories, type CategoryRecord } from "@/lib/finance";
+import { UiButton } from "@/components/ui/button";
+import { UiInput } from "@/components/ui/input";
+import { UiSelect } from "@/components/ui/select";
 
 export const dynamic = "force-dynamic";
 
@@ -21,9 +24,10 @@ function groupCategories(categories: CategoryRecord[]) {
   );
 }
 
-function inputClassName() {
-  return "w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]";
-}
+const typeItems = [
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
+] as const;
 
 function sectionTitle(type: "income" | "expense") {
   return type === "income" ? "Income categories" : "Expense categories";
@@ -82,26 +86,15 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
                 <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
                   Name
                 </span>
-                <input
-                  name="name"
-                  defaultValue={category.name}
-                  className={inputClassName()}
-                />
+                <UiInput name="name" defaultValue={category.name} className="w-full" />
               </label>
 
-              <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-                  Type
-                </span>
-                <select
-                  name="type"
-                  defaultValue={category.type}
-                  className={inputClassName()}
-                >
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                </select>
-              </label>
+              <UiSelect
+                name="type"
+                label="Type"
+                defaultValue={category.type}
+                items={[...typeItems]}
+              />
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
@@ -109,11 +102,11 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
                 <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
                   Icon name
                 </span>
-                <input
+                <UiInput
                   name="icon"
                   defaultValue={category.icon ?? ""}
                   placeholder="Wallet"
-                  className={inputClassName()}
+                  className="w-full"
                 />
               </label>
 
@@ -130,24 +123,24 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
               </label>
             </div>
 
-            <button
+            <UiButton
               type="submit"
-              className="inline-flex items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+              variant="primary"
             >
               <Pencil className="h-4 w-4" />
               Update
-            </button>
+            </UiButton>
           </form>
 
           <form action={deleteCategoryFormAction}>
             <input type="hidden" name="id" value={category.id} />
-            <button
+            <UiButton
               type="submit"
-              className="inline-flex items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-text)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+              variant="secondary"
             >
               <Trash2 className="h-4 w-4" />
               Delete
-            </button>
+            </UiButton>
           </form>
         </div>
       </details>
@@ -192,18 +185,15 @@ export default async function CategoriesPage() {
             <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
               Name
             </span>
-            <input name="name" required className={inputClassName()} placeholder="Makanan" />
+            <UiInput name="name" required className="w-full" placeholder="Makanan" />
           </label>
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-              Type
-            </span>
-            <select name="type" defaultValue="expense" className={inputClassName()}>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </label>
+          <UiSelect
+            name="type"
+            label="Type"
+            defaultValue="expense"
+            items={[...typeItems]}
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -211,10 +201,10 @@ export default async function CategoriesPage() {
             <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
               Icon name
             </span>
-            <input
+            <UiInput
               name="icon"
               placeholder="ShoppingCart"
-              className={inputClassName()}
+              className="w-full"
             />
           </label>
 
@@ -231,13 +221,13 @@ export default async function CategoriesPage() {
           </label>
         </div>
 
-        <button
+        <UiButton
           type="submit"
-          className="inline-flex items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+          variant="primary"
         >
           <PlusCircle className="h-4 w-4" />
           Save category
-        </button>
+        </UiButton>
       </form>
 
       {(["income", "expense"] as const).map((type) => (

@@ -3,6 +3,8 @@
 import { useMemo, useState, useTransition, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { UiButton } from "@/components/ui/button";
+import { UiInput } from "@/components/ui/input";
 
 type AuthMode = "magic-link" | "password";
 
@@ -78,28 +80,22 @@ export function LoginForm() {
       </div>
 
       <div className="inline-flex rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
-        <button
+        <UiButton
           type="button"
+          variant={mode === "password" ? "primary" : "ghost"}
+          className="rounded-[14px] px-4 py-2 text-sm shadow-none hover:shadow-none"
           onClick={() => setMode("password")}
-            className={`rounded-[14px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
-            mode === "password"
-              ? "bg-[var(--retro-accent)] text-[var(--retro-ink)]"
-              : "text-[var(--retro-muted)] hover:text-[var(--retro-text)]"
-          }`}
         >
           Password
-        </button>
-        <button
+        </UiButton>
+        <UiButton
           type="button"
+          variant={mode === "magic-link" ? "primary" : "ghost"}
+          className="rounded-[14px] px-4 py-2 text-sm shadow-none hover:shadow-none"
           onClick={() => setMode("magic-link")}
-            className={`rounded-[14px] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
-            mode === "magic-link"
-              ? "bg-[var(--retro-accent)] text-[var(--retro-ink)]"
-              : "text-[var(--retro-muted)] hover:text-[var(--retro-text)]"
-          }`}
         >
           Magic Link
-        </button>
+        </UiButton>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,12 +103,12 @@ export function LoginForm() {
           <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
             Email
           </span>
-          <input
+          <UiInput
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
-            className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]"
+            className="w-full"
             placeholder="nama@contoh.com"
           />
         </label>
@@ -122,12 +118,12 @@ export function LoginForm() {
             <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
               Password
             </span>
-            <input
+            <UiInput
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
-              className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]"
+              className="w-full"
               placeholder="Masukkan password"
             />
           </label>
@@ -138,13 +134,14 @@ export function LoginForm() {
           </p>
         )}
 
-        <button
+        <UiButton
           type="submit"
+          variant="primary"
           disabled={isPending}
-          className="w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full"
         >
           {isPending ? "Processing..." : mode === "magic-link" ? "Send link" : "Continue"}
-        </button>
+        </UiButton>
       </form>
 
       {message ? (
