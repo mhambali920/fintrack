@@ -113,7 +113,7 @@ export function DatePickerField({
         <div className="relative">
           <Popover.Trigger
             className={cn(
-              "flex w-full items-center justify-between rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] focus:border-[var(--retro-accent)]",
+              "flex w-full items-center justify-between rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] sm:rounded-[16px] sm:px-4 sm:py-3 focus:border-[var(--retro-accent)]",
               !selectedLabel && "text-[var(--retro-muted)]",
             )}
           >
@@ -125,12 +125,12 @@ export function DatePickerField({
 
         <Popover.Portal>
           <Popover.Positioner sideOffset={8} className="z-[80]">
-            <Popover.Popup className="w-[320px] rounded-[22px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)]">
+            <Popover.Popup className="w-[min(320px,calc(100vw-2rem))] rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-3 shadow-[10px_10px_0_var(--retro-shadow)] sm:w-[320px] sm:rounded-[22px] sm:p-4">
               <div className="flex items-center justify-between gap-2">
                 <UiButton
                   type="button"
                   variant="secondary"
-                  className="h-10 w-10 p-0"
+                  className="h-9 w-9 p-0 sm:h-10 sm:w-10"
                   onClick={() =>
                     setViewDate(
                       new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1),
@@ -147,7 +147,7 @@ export function DatePickerField({
                 <UiButton
                   type="button"
                   variant="secondary"
-                  className="h-10 w-10 p-0"
+                  className="h-9 w-9 p-0 sm:h-10 sm:w-10"
                   onClick={() =>
                     setViewDate(
                       new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1),
@@ -177,7 +177,7 @@ export function DatePickerField({
                       key={day.toISOString()}
                       type="button"
                       variant={isSelected ? "primary" : "secondary"}
-                      className="h-10 px-0 py-0 text-sm"
+                      className="h-9 px-0 py-0 text-xs sm:h-10 sm:text-sm"
                       onClick={() => selectDate(day)}
                     >
                       {day.getDate()}

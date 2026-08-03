@@ -69,21 +69,21 @@ export function LoginForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[var(--retro-accent)]">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.35em]">
           Sign in
         </p>
-        <h2 className="mt-2 text-3xl font-bold text-[var(--retro-text)]">
+        <h2 className="mt-2 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
           Login or create an account
         </h2>
       </div>
 
-      <div className="inline-flex rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
+      <div className="inline-flex rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
         <UiButton
           type="button"
           variant={mode === "password" ? "primary" : "ghost"}
-          className="rounded-[14px] px-4 py-2 text-sm shadow-none hover:shadow-none"
+          className="rounded-[12px] px-3 py-2 text-xs shadow-none hover:shadow-none sm:rounded-[14px] sm:px-4 sm:text-sm"
           onClick={() => setMode("password")}
         >
           Password
@@ -91,16 +91,16 @@ export function LoginForm() {
         <UiButton
           type="button"
           variant={mode === "magic-link" ? "primary" : "ghost"}
-          className="rounded-[14px] px-4 py-2 text-sm shadow-none hover:shadow-none"
+          className="rounded-[12px] px-3 py-2 text-xs shadow-none hover:shadow-none sm:rounded-[14px] sm:px-4 sm:text-sm"
           onClick={() => setMode("magic-link")}
         >
           Magic Link
         </UiButton>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
         <label className="block">
-          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.14em]">
             Email
           </span>
           <UiInput
@@ -115,7 +115,7 @@ export function LoginForm() {
 
         {mode === "password" ? (
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+            <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.14em]">
               Password
             </span>
             <UiInput
@@ -128,7 +128,7 @@ export function LoginForm() {
             />
           </label>
         ) : (
-          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
+          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
             Mode ini akan mengirim tautan masuk ke email kamu. Pastikan alamat
             email sudah benar.
           </p>
@@ -145,7 +145,7 @@ export function LoginForm() {
       </form>
 
       {message ? (
-        <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
+        <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
           {message}
         </p>
       ) : null}

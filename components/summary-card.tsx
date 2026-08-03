@@ -19,14 +19,14 @@ export function SummaryCard({
   tone = "default",
 }: SummaryCardProps) {
   return (
-    <article className="retro-panel rounded-[24px] p-6">
-      <p className="relative z-10 text-sm font-semibold uppercase tracking-[0.22em] text-[var(--retro-accent)]">
+    <article className="retro-panel rounded-[22px] p-4 sm:rounded-[24px] sm:p-6">
+      <p className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--retro-accent)] sm:text-sm">
         {label}
       </p>
-      <h3 className={`relative z-10 mt-3 text-2xl font-bold ${toneClasses[tone]}`}>
+      <h3 className={`relative z-10 mt-2 text-xl font-bold sm:mt-3 sm:text-2xl ${toneClasses[tone]}`}>
         {value}
       </h3>
-      <p className="relative z-10 mt-2 text-sm leading-6 text-[var(--retro-muted)]">
+      <p className="relative z-10 mt-2 text-xs leading-5 text-[var(--retro-muted)] sm:text-sm sm:leading-6">
         {note}
       </p>
     </article>

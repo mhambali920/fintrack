@@ -12,7 +12,7 @@ export function UiInput({ className, ...props }: UiInputProps) {
       {...props}
       className={(state) =>
         cn(
-          "w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] focus:border-[var(--retro-accent)]",
+          "w-full rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-[var(--retro-text)] outline-none transition placeholder:text-[var(--retro-muted)] sm:rounded-[16px] sm:px-4 sm:py-3 focus:border-[var(--retro-accent)]",
           typeof className === "function" ? className(state) : className,
         )
       }

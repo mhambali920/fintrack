@@ -61,7 +61,7 @@ export function UiSelect({
         </Select.Label>
 
         <div className="relative">
-          <Select.Trigger className="flex w-full items-center justify-between rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-4 py-3 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] focus:border-[var(--retro-accent)]">
+          <Select.Trigger className="flex w-full items-center justify-between rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] sm:rounded-[16px] sm:px-4 sm:py-3 focus:border-[var(--retro-accent)]">
             <Select.Value placeholder={placeholder} />
             <Select.Icon className="ml-3 inline-flex text-[var(--retro-muted)]">
               <ChevronDown className="h-4 w-4" />
@@ -73,7 +73,7 @@ export function UiSelect({
 
         <Select.Portal>
           <Select.Positioner sideOffset={8} className="z-[70]">
-            <Select.Popup className="min-w-[var(--base-ui-anchor-width)] rounded-[20px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-2 shadow-[10px_10px_0_var(--retro-shadow)]">
+            <Select.Popup className="min-w-[var(--base-ui-anchor-width)] rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-2 shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[20px] sm:p-2">
               <Select.ScrollUpArrow className="flex justify-center px-2 py-2 text-[var(--retro-muted)]">
                 <ChevronUp className="h-4 w-4" />
               </Select.ScrollUpArrow>
@@ -83,7 +83,7 @@ export function UiSelect({
                   <Select.Item
                     key={item.value}
                     value={item.value}
-                    className="flex cursor-pointer items-center justify-between rounded-[14px] px-4 py-3 text-sm text-[var(--retro-text)] outline-none transition hover:bg-[var(--retro-surface)] data-[highlighted]:bg-[var(--retro-surface)] data-[selected]:bg-[var(--retro-surface)]"
+                    className="flex cursor-pointer items-center justify-between rounded-[12px] px-3.5 py-2.5 text-sm text-[var(--retro-text)] outline-none transition hover:bg-[var(--retro-surface)] data-[highlighted]:bg-[var(--retro-surface)] data-[selected]:bg-[var(--retro-surface)] sm:rounded-[14px] sm:px-4 sm:py-3"
                   >
                     <Select.ItemText>{item.label}</Select.ItemText>
                     <Select.ItemIndicator className="text-[var(--retro-accent)]">

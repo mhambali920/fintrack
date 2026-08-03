@@ -31,7 +31,7 @@ export function UiButton({
       focusableWhenDisabled={focusableWhenDisabled}
       className={(state) =>
         cn(
-          "inline-flex items-center justify-center rounded-[16px] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] disabled:cursor-not-allowed disabled:opacity-70",
+          "inline-flex items-center justify-center rounded-[14px] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] sm:rounded-[16px] sm:px-4 sm:py-3 sm:text-sm disabled:cursor-not-allowed disabled:opacity-70",
           variantClasses[variant],
           typeof className === "function" ? className(state) : className,
         )

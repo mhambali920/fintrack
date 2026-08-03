@@ -94,13 +94,13 @@ export default async function TransactionsPage({
   const baseQuery = buildQueryString(currentQuery);
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-[26px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-5 shadow-[10px_10px_0_var(--retro-shadow)] lg:flex-row lg:items-end lg:justify-between">
+    <section className="space-y-5 sm:space-y-6">
+      <div className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[26px] sm:p-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--retro-accent)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
             Transactions
           </p>
-          <h2 className="mt-2 text-3xl font-bold text-[var(--retro-text)]">
+          <h2 className="mt-2 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
             Riwayat transaksi
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--retro-muted)]">
@@ -110,7 +110,7 @@ export default async function TransactionsPage({
 
         <Link
           href="/transactions/add"
-          className="inline-flex w-fit items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+          className="inline-flex w-fit items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em]"
         >
           <PlusCircle className="h-4 w-4" />
           Add transaction
@@ -120,16 +120,16 @@ export default async function TransactionsPage({
 
       <form
         method="get"
-        className="flex flex-col gap-4 rounded-[26px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-5 shadow-[10px_10px_0_var(--retro-shadow)]"
+        className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[26px] sm:p-5"
       >
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-[var(--retro-accent)]" />
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--retro-accent)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
             Filter
           </p>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[1fr_1fr_auto]">
+        <div className="grid gap-3 lg:grid-cols-[1fr_1fr_auto]">
           <label className="block">
             <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
               Month
@@ -152,7 +152,7 @@ export default async function TransactionsPage({
           <UiButton
             type="submit"
             variant="primary"
-            className="mt-auto h-fit w-fit"
+            className="mt-auto h-fit w-full lg:w-fit"
           >
             Apply filters
           </UiButton>
@@ -160,7 +160,7 @@ export default async function TransactionsPage({
       </form>
 
       {result.items.length > 0 ? (
-        <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3">
           {result.items.map((transaction) => (
             <TransactionItem
               key={transaction.id}
@@ -184,13 +184,13 @@ export default async function TransactionsPage({
           ))}
         </div>
       ) : (
-        <div className="rounded-[26px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-5 text-sm leading-6 text-[var(--retro-muted)] shadow-[10px_10px_0_var(--retro-shadow)]">
+        <div className="rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 text-sm leading-6 text-[var(--retro-muted)] shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[26px] sm:p-5">
           Tidak ada transaksi untuk filter ini. Coba ubah bulan atau tipe,
           atau tambahkan transaksi baru.
         </div>
       )}
 
-      <div className="flex flex-col gap-3 rounded-[26px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-5 shadow-[10px_10px_0_var(--retro-shadow)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:flex-row sm:items-center sm:justify-between sm:rounded-[26px] sm:p-5">
         <p className="text-sm leading-6 text-[var(--retro-muted)]">
           Page {result.page} of {result.totalPages} · {result.totalCount} total
         </p>
@@ -202,7 +202,7 @@ export default async function TransactionsPage({
               page: Math.max(1, result.page - 1),
             })}`}
             aria-disabled={result.page <= 1}
-            className={`inline-flex items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] transition ${
+            className={`inline-flex items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em] ${
               result.page <= 1
                 ? "pointer-events-none bg-[var(--retro-surface)] text-[var(--retro-muted)] opacity-60"
                 : "bg-[var(--retro-surface)] text-[var(--retro-text)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
@@ -218,7 +218,7 @@ export default async function TransactionsPage({
               page: Math.min(result.totalPages, result.page + 1),
             })}`}
             aria-disabled={result.page >= result.totalPages}
-            className={`inline-flex items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] transition ${
+            className={`inline-flex items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em] ${
               result.page >= result.totalPages
                 ? "pointer-events-none bg-[var(--retro-surface)] text-[var(--retro-muted)] opacity-60"
                 : "bg-[var(--retro-surface)] text-[var(--retro-text)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"

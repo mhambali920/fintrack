@@ -9,13 +9,13 @@ export default async function AddTransactionPage() {
   const initialCategories = await getCategoriesByType("expense");
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-[26px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-5 shadow-[10px_10px_0_var(--retro-shadow)] lg:flex-row lg:items-end lg:justify-between">
+    <section className="space-y-5 sm:space-y-6">
+      <div className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[26px] sm:p-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--retro-accent)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
             Transactions
           </p>
-          <h2 className="mt-2 text-3xl font-bold text-[var(--retro-text)]">
+          <h2 className="mt-2 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
             Add a new entry
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--retro-muted)]">
@@ -26,7 +26,7 @@ export default async function AddTransactionPage() {
 
         <Link
           href="/"
-          className="inline-flex w-fit items-center gap-2 rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--retro-text)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+          className="inline-flex w-fit items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-[var(--retro-text)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to dashboard

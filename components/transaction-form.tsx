@@ -133,19 +133,19 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
   return (
     <form
       action={formAction}
-      className="space-y-6 rounded-[26px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-5 shadow-[10px_10px_0_var(--retro-shadow)]"
+      className="space-y-5 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:space-y-6 sm:rounded-[26px] sm:p-5"
     >
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--retro-accent)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
             Transaction entry
           </p>
-          <h2 className="mt-1 text-3xl font-bold text-[var(--retro-text)]">
+          <h2 className="mt-1 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
             Catat pemasukan atau pengeluaran
           </h2>
         </div>
 
-        <div className="inline-flex rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
+        <div className="inline-flex rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
           {(["expense", "income"] as EntityType[]).map((option) => {
             const active = type === option;
 
@@ -155,7 +155,7 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
                 type="button"
                 variant={active ? "primary" : "ghost"}
                 onClick={() => onTypeChange(option)}
-                className="rounded-[14px] px-4 py-2 text-xs shadow-none hover:shadow-none"
+                className="rounded-[12px] px-3 py-2 text-xs shadow-none hover:shadow-none sm:rounded-[14px] sm:px-4"
               >
                 {option}
               </UiButton>
@@ -166,9 +166,9 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
 
       <input type="hidden" name="type" value={type} />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2">
         <label className="block">
-          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.14em]">
             Amount
           </span>
           <UiInput
@@ -194,7 +194,7 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+      <div className="grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-2">
           <UiSelect
             name="category_id"
@@ -208,14 +208,14 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
             placeholder={isFetchingCategories ? "Loading categories..." : "Select category"}
           />
           {selectedCategory ? (
-            <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--retro-muted)]">
+            <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-[10px] uppercase tracking-[0.12em] text-[var(--retro-muted)] sm:px-4 sm:py-3 sm:text-xs sm:tracking-[0.14em]">
               {selectedCategory.type} category selected
             </p>
           ) : null}
         </div>
 
         <label className="block">
-          <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.14em]">
             Description
           </span>
           <UiInput
@@ -229,21 +229,21 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
         </label>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2.5">
         {clientError ? (
-          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
+          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
             {clientError}
           </p>
         ) : null}
 
         {actionState.error ? (
-          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
+          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
             {actionState.error}
           </p>
         ) : null}
 
         {actionState.ok ? (
-          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-4 py-3 text-sm leading-6 text-[var(--retro-muted)]">
+          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
             Transaction saved successfully.
           </p>
         ) : null}
