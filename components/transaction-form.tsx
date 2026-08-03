@@ -13,7 +13,7 @@ import type { CategoryRecord, EntityType } from "@/lib/finance";
 import { createTransactionAction } from "@/app/(dashboard)/actions";
 import { UiButton } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/input";
-import { UiSelect } from "@/components/ui/select";
+import { UiCombobox } from "@/components/ui/combobox";
 import { DatePickerField } from "@/components/ui/date-picker";
 
 type ActionState = {
@@ -196,7 +196,7 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
 
       <div className="grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-2">
-          <UiSelect
+          <UiCombobox
             name="category_id"
             label="Category"
             value={categoryId}
@@ -206,6 +206,10 @@ export function TransactionForm({ initialCategories }: TransactionFormProps) {
               value: category.id,
             }))}
             placeholder={isFetchingCategories ? "Loading categories..." : "Select category"}
+            searchPlaceholder="Search category"
+            emptyText={
+              isFetchingCategories ? "Loading categories..." : "No matching category."
+            }
           />
           {selectedCategory ? (
             <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-[10px] uppercase tracking-[0.12em] text-[var(--retro-muted)] sm:px-4 sm:py-3 sm:text-xs sm:tracking-[0.14em]">
