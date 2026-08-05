@@ -3,16 +3,29 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, LayoutDashboard, ArrowLeftRight, Tags } from "lucide-react";
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  ArrowLeftRight,
+  Tags,
+  Plus,
+  PieChart,
+  Wallet,
+  ChevronRight,
+} from "lucide-react";
 import { SignOutButton } from "@/components/sign-out-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UiButton } from "@/components/ui/button";
+import { TransactionModal } from "@/components/transaction-modal";
+import type { CategoryRecord } from "@/lib/finance";
 import { cn } from "@/lib/cn";
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/transactions", label: "Transactions", icon: ArrowLeftRight },
-  { href: "/categories", label: "Categories", icon: Tags },
+  { href: "/", label: "Beranda", icon: LayoutDashboard },
+  { href: "/transactions", label: "Transaksi", icon: ArrowLeftRight },
+  { href: "/analytics", label: "Analisis", icon: PieChart },
+  { href: "/categories", label: "Kategori", icon: Tags },
 ];
 
 function isActivePath(pathname: string, href: string) {
@@ -23,140 +36,167 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function getUserInitials(email: string) {
+  if (!email) return "FT";
+  const namePart = email.split("@")[0];
+  return namePart.slice(0, 2).toUpperCase();
+}
+
 export function DashboardShell({
   userEmail,
   children,
+  initialCategories = [],
 }: {
   userEmail: string;
   children: ReactNode;
+  initialCategories?: CategoryRecord[];
 }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const activeLabel = useMemo(
-    () => navItems.find((item) => isActivePath(pathname, item.href))?.label ?? "Dashboard",
+    () =>
+      navItems.find((item) => isActivePath(pathname, item.href))?.label ??
+      "Dashboard",
     [pathname],
   );
+
+  const userInitials = useMemo(() => getUserInitials(userEmail), [userEmail]);
 
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  useEffect(() => {
-    if (!mobileMenuOpen) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMobileMenuOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [mobileMenuOpen]);
-
   return (
-    <div className="min-h-screen text-[var(--retro-text)]">
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-4 px-3 py-3 sm:px-4 sm:py-4 lg:grid lg:grid-cols-[270px_minmax(0,1fr)] lg:items-start lg:px-6 lg:py-6">
-        <aside className="retro-panel hidden flex-col rounded-[24px] p-4 lg:sticky lg:top-6 lg:flex lg:h-[calc(100dvh-3rem)] lg:max-h-[calc(100dvh-3rem)] lg:self-start lg:overflow-y-auto">
-          <div className="relative z-10 space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--retro-accent)]">
-              FinTrack
-            </p>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p className="text-sm leading-6 text-[var(--retro-muted)]">
-              {userEmail}
-            </p>
+    <div className="min-h-screen text-foreground pb-24 lg:pb-0 bg-background">
+      <div className="mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-4 lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-6 lg:px-6 lg:py-6">
+        {/* Desktop Sidebar Navigation */}
+        <aside className="glass-panel hidden flex-col justify-between rounded-3xl p-5 lg:sticky lg:top-6 lg:flex lg:h-[calc(100dvh-3rem)]">
+          <div className="space-y-6">
+            {/* Brand Logo */}
+            <Link href="/" className="flex items-center gap-3 group px-2 py-1">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl gradient-card text-gray-800 shadow-md group-hover:scale-105 transition-transform duration-200">
+                <Wallet className="h-5 w-5" />
+              </div>
+              <div>
+                <span className="text-xl font-bold tracking-tight text-foreground">
+                  FinTrack
+                </span>
+                <span className="block text-[10px] uppercase tracking-widest text-muted font-medium">
+                  AI Pro Workspace
+                </span>
+              </div>
+            </Link>
+
+            {/* Navigation Items */}
+            <nav className="flex flex-col gap-1.5 pt-2">
+              {navItems.map((item) => {
+                const active = isActivePath(pathname, item.href);
+                const Icon = item.icon;
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group",
+                      active
+                        ? "gradient-card text-gray-800 font-bold shadow-md"
+                        : "text-muted] hover:text-foreground hover:bg-(--surface-hover)",
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
+                        className={cn(
+                          "h-4 w-4 transition-transform duration-200 group-hover:scale-110",
+                          active ? "text-gray-800" : "text-muted",
+                        )}
+                      />
+                      <span>{item.label}</span>
+                    </div>
+                    {active && (
+                      <ChevronRight className="h-4 w-4 text-gray-700" />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
 
-          <nav className="relative z-10 mt-8 flex flex-1 flex-col gap-3">
-            {navItems.map((item) => {
-              const active = isActivePath(pathname, item.href);
-              const Icon = item.icon;
+          {/* User Profile & Footer Controls */}
+          <div className="space-y-4 pt-6 border-t border-border">
+            <div className="flex items-center gap-3 rounded-2xl bg-[var(--surface)] p-3 border border-[var(--border)] shadow-sm">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-card text-gray-800 font-bold text-xs shadow-sm">
+                {userInitials}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-semibold text-foreground">
+                  {userEmail}
+                </p>
+                <span className="inline-flex items-center gap-1 text-[10px] text-teal-600 font-medium">
+                  <span className="h-1.5 w-1.5 rounded-full bg-teal-500 animate-pulse" />
+                  Sesi Aktif
+                </span>
+              </div>
+            </div>
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center gap-3 rounded-[18px] border-2 px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] transition hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0_var(--retro-shadow)]",
-                    active
-                      ? "border-[var(--retro-border)] bg-[var(--retro-accent)] !text-[var(--retro-ink)]"
-                      : "border-[var(--retro-border)] bg-[var(--retro-surface)] text-[var(--retro-text)]",
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+            <div className="flex items-center justify-between gap-2 w-full">
+              <ThemeToggle
+                showLabel={false}
+                className="w-full justify-around"
+              />
+            </div>
 
-          <div className="mt-4 space-y-3">
             <SignOutButton />
           </div>
         </aside>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-5">
-          <div className="flex items-center justify-between rounded-[20px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] px-3 py-2.5 shadow-[6px_6px_0_var(--retro-shadow)] sm:px-4 sm:py-3 lg:hidden">
-            <div className="min-w-0">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[var(--retro-accent)] sm:text-[10px] sm:tracking-[0.3em]">
-                FinTrack
-              </p>
-              <h1 className="truncate text-base font-bold text-[var(--retro-text)] sm:text-lg">
-                {activeLabel}
-              </h1>
+        {/* Main Content Area & Mobile Top Navbar */}
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          {/* Mobile Header Bar */}
+          <header className="glass-panel sticky top-3 z-40 flex items-center justify-between rounded-2xl px-4 py-3 shadow-md lg:hidden">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-card text-gray-800 shadow-sm">
+                <Wallet className="h-4.5 w-4.5" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary)]">
+                  FinTrack AI
+                </p>
+                <h1 className="text-base font-bold tracking-tight text-foreground">
+                  {activeLabel}
+                </h1>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <UiButton
                 type="button"
-                variant="secondary"
-                className="h-11 w-11 rounded-full p-0"
+                variant="ghost"
+                size="sm"
+                className="h-9 w-9 p-0 rounded-xl"
                 onClick={() => setMobileMenuOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={mobileMenuOpen}
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-5 w-5 text-foreground" />
               </UiButton>
             </div>
-          </div>
+          </header>
 
-          <main className="retro-panel flex min-h-[calc(100vh-1.5rem)] flex-col rounded-[24px] p-3 sm:p-4 lg:min-h-[calc(100dvh-3rem)] lg:p-8">
-            <header className="relative z-10 flex flex-col gap-2.5 border-b-2 border-[var(--retro-border)] pb-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
-                  Protected area
-                </p>
-                <h2 className="mt-1 text-2xl font-bold sm:text-3xl">
-                  Manage your finances
-                </h2>
-              </div>
-              <div className="flex flex-col items-start gap-3 sm:items-end">
-                <div className="w-fit rounded-full border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3 py-1.5 text-[11px] uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:px-4 sm:py-2 sm:text-sm sm:tracking-[0.15em]">
-                  Signed in as {userEmail}
-                </div>
-              </div>
-            </header>
-
-            <div className="relative z-10 flex-1 py-4 sm:py-6">{children}</div>
+          {/* Page Container */}
+          <main className="glass-panel min-h-[calc(100vh-6rem)] rounded-3xl p-4 sm:p-6 lg:p-8 shadow-sm">
+            {children}
           </main>
         </div>
       </div>
 
+      {/* Mobile Drawer Navigation Overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-[90] bg-black/40 transition-opacity duration-300 lg:hidden",
+          "fixed inset-0 z-[90] bg-gray-900/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
           mobileMenuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
@@ -167,61 +207,134 @@ export function DashboardShell({
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-[100] w-[86vw] max-w-[320px] transform border-r-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[12px_0_0_var(--retro-shadow)] transition-transform duration-300 lg:hidden",
+          "fixed inset-y-0 left-0 z-[100] flex w-[85vw] max-w-[300px] flex-col justify-between border-r border-[var(--border)] bg-[var(--panel)] p-5 shadow-2xl backdrop-blur-2xl transition-transform duration-300 lg:hidden",
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full",
         )}
         aria-hidden={!mobileMenuOpen}
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--retro-accent)]">
-              FinTrack
-            </p>
-            <h2 className="text-xl font-bold">Menu</h2>
-            <p className="text-sm leading-6 text-[var(--retro-muted)]">
-              {userEmail}
-            </p>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl gradient-card text-gray-800 shadow-sm">
+                <Wallet className="h-5 w-5" />
+              </div>
+              <div>
+                <span className="text-base font-bold text-foreground">
+                  FinTrack
+                </span>
+                <p className="text-[10px] text-[var(--muted)]">
+                  Navigasi Utama
+                </p>
+              </div>
+            </div>
+
+            <UiButton
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 rounded-xl"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </UiButton>
           </div>
 
-          <UiButton
-            type="button"
-            variant="secondary"
-            className="h-11 w-11 rounded-full p-0"
-            onClick={() => setMobileMenuOpen(false)}
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </UiButton>
+          <div className="flex items-center gap-3 rounded-2xl bg-[var(--surface)] p-3 border border-[var(--border)] shadow-sm">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-card text-gray-800 font-bold text-xs">
+              {userInitials}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-foreground">
+                {userEmail}
+              </p>
+              <p className="text-[10px] text-[var(--muted)]">Akun Aktif</p>
+            </div>
+          </div>
+
+          <nav className="space-y-1.5">
+            {navItems.map((item) => {
+              const active = isActivePath(pathname, item.href);
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
+                    active
+                      ? "gradient-card text-gray-800 font-bold shadow-md"
+                      : "text-[var(--muted)] hover:text-foreground hover:bg-[var(--surface-hover)]",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </div>
+                  {active && <ChevronRight className="h-4 w-4 text-gray-700" />}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
 
-        <nav className="mt-6 space-y-2.5">
-          {navItems.map((item) => {
-            const active = isActivePath(pathname, item.href);
-            const Icon = item.icon;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 rounded-[16px] border-2 px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] transition",
-                  active
-                    ? "border-[var(--retro-border)] bg-[var(--retro-accent)] !text-[var(--retro-ink)]"
-                    : "border-[var(--retro-border)] bg-[var(--retro-surface)] text-[var(--retro-text)]",
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="mt-4">
+        <div className="space-y-4 pt-4 border-t border-[var(--border)]">
           <SignOutButton />
         </div>
       </aside>
+
+      {/* Reference HTML Bottom Nav Bar with Central FAB + Button */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-t border-[var(--border)] pb-safe pt-2 px-6 flex justify-between items-center h-20 shadow-[0_-10px_20px_rgba(0,0,0,0.03)] z-40 lg:hidden">
+        {/* Beranda Link */}
+        <Link
+          href="/"
+          className={cn(
+            "flex flex-col items-center gap-1 w-16 transition-colors",
+            pathname === "/"
+              ? "text-teal-600 dark:text-teal-400 font-semibold"
+              : "text-gray-400 hover:text-teal-600 font-medium",
+          )}
+        >
+          <LayoutDashboard className="w-6 h-6" />
+          <span className="text-[10px]">Beranda</span>
+        </Link>
+
+        {/* Central FAB Spacer */}
+        <div className="w-16"></div>
+
+        {/* Analisis Link */}
+        <Link
+          href="/analytics"
+          className={cn(
+            "flex flex-col items-center gap-1 w-16 transition-colors",
+            pathname.startsWith("/analytics")
+              ? "text-teal-600 dark:text-teal-400 font-semibold"
+              : "text-gray-400 hover:text-teal-600 font-medium",
+          )}
+        >
+          <PieChart className="w-6 h-6" />
+          <span className="text-[10px]">Analisis</span>
+        </Link>
+      </div>
+
+      {/* Reference HTML Floating Action Button (FAB) */}
+      <button
+        type="button"
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 gradient-card text-gray-800 rounded-full w-14 h-14 flex items-center justify-center shadow-[0_10px_25px_rgba(163,228,215,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 z-50 border-4 border-[#F8F9FA] dark:border-gray-900 cursor-pointer lg:hidden"
+        title="Catat Transaksi Baru"
+      >
+        <Plus className="w-6 h-6" />
+      </button>
+
+      {/* Transaction Modal trigger */}
+      <TransactionModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialCategories={initialCategories}
+      />
     </div>
   );
 }

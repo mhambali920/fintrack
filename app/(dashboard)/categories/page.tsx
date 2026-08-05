@@ -1,4 +1,4 @@
-import { PlusCircle, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, Tags, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import {
   createCategoryFormAction,
   deleteCategoryFormAction,
@@ -25,83 +25,104 @@ function groupCategories(categories: CategoryRecord[]) {
 }
 
 const typeItems = [
-  { label: "Income", value: "income" },
-  { label: "Expense", value: "expense" },
+  { label: "Pemasukan (Income)", value: "income" },
+  { label: "Pengeluaran (Expense)", value: "expense" },
 ] as const;
 
 function sectionTitle(type: "income" | "expense") {
-  return type === "income" ? "Income categories" : "Expense categories";
+  return type === "income" ? "Kategori Pemasukan" : "Kategori Pengeluaran";
 }
 
 function sectionNote(type: "income" | "expense") {
   return type === "income"
-    ? "Kategori untuk pemasukan seperti gaji, bonus, atau transfer masuk."
-    : "Kategori untuk pengeluaran seperti makanan, transport, dan tagihan.";
+    ? "Kategori untuk mengelompokkan sumber pemasukan seperti gaji, bisnis, investasi, atau bonus."
+    : "Kategori untuk mengelompokkan pengeluaran seperti makanan, belanjawan, tagihan, dan hiburan.";
 }
 
 function safeColor(color: string | null) {
   return color && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color)
     ? color
-    : "var(--retro-accent)";
+    : "#6366f1";
 }
 
 function CategoryCard({ category }: { category: CategoryRecord }) {
+  const color = safeColor(category.color);
+  const isIncome = category.type === "income";
+
   return (
-    <article className="rounded-[20px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-3.5 shadow-[5px_5px_0_var(--retro-shadow)] sm:rounded-[22px] sm:p-4">
-      <div className="flex items-start justify-between gap-3 sm:gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <span
-              className="h-3.5 w-3.5 rounded-full border-2 border-[var(--retro-border)] sm:h-4 sm:w-4"
-              style={{ backgroundColor: safeColor(category.color) }}
-            />
-            <h3 className="truncate text-base font-bold text-[var(--retro-text)] sm:text-lg">
-              {category.name}
-            </h3>
+    <article className="group relative rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5 transition-all duration-200 hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 shadow-inner"
+            style={{
+              backgroundColor: `${color}18`,
+              color: color,
+              borderColor: `${color}30`,
+            }}
+          >
+            {category.icon ? (
+              <span className="text-xs font-bold uppercase">{category.icon.slice(0, 2)}</span>
+            ) : isIncome ? (
+              <ArrowUpRight className="h-5 w-5 text-emerald-500" />
+            ) : (
+              <ArrowDownLeft className="h-5 w-5 text-rose-500" />
+            )}
           </div>
-          <p className="mt-1.5 text-[10px] uppercase tracking-[0.16em] text-[var(--retro-muted)] sm:mt-2 sm:text-xs sm:tracking-[0.18em]">
-            {category.type} {category.icon ? `· ${category.icon}` : ""}
-          </p>
+
+          <div className="min-w-0">
+            <h4 className="truncate text-base font-bold text-[var(--foreground)]">
+              {category.name}
+            </h4>
+            <p className="text-[11px] text-[var(--muted)]">
+              {category.icon ? `Icon: ${category.icon}` : "Standard icon"}
+            </p>
+          </div>
         </div>
 
-        <div className="rounded-full border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:px-3 sm:text-xs sm:tracking-[0.15em]">
+        <span
+          className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+          style={{
+            backgroundColor: `${color}15`,
+            color: color,
+            borderColor: `${color}30`,
+          }}
+        >
           {category.type}
-        </div>
+        </span>
       </div>
 
-      <details className="relative z-10 mt-3.5 sm:mt-4">
-        <summary className="cursor-pointer list-none rounded-[12px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-[var(--retro-text)] sm:rounded-[14px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em]">
-          <span className="inline-flex items-center gap-2">
-            <Pencil className="h-4 w-4" />
-            Edit category
+      {/* Edit Accordion */}
+      <details className="mt-4 pt-3 border-t border-[var(--border)] group/details">
+        <summary className="cursor-pointer list-none flex items-center justify-between text-xs font-semibold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+          <span className="inline-flex items-center gap-1.5">
+            <Pencil className="h-3.5 w-3.5 text-indigo-500" />
+            Edit Kategori
           </span>
+          <span className="text-[10px] bg-[var(--surface-hover)] px-2 py-0.5 rounded-md">Atur</span>
         </summary>
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-4 pt-2">
           <form action={updateCategoryFormAction} className="space-y-3">
             <input type="hidden" name="id" value={category.id} />
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-                  Name
-                </span>
+              <label className="block space-y-1">
+                <span className="block text-xs font-medium text-[var(--muted)]">Nama</span>
                 <UiInput name="name" defaultValue={category.name} className="w-full" />
               </label>
 
               <UiSelect
                 name="type"
-                label="Type"
+                label="Tipe"
                 defaultValue={category.type}
                 items={[...typeItems]}
               />
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-                  Icon name
-                </span>
+              <label className="block space-y-1">
+                <span className="block text-xs font-medium text-[var(--muted)]">Icon Name</span>
                 <UiInput
                   name="icon"
                   defaultValue={category.icon ?? ""}
@@ -110,36 +131,35 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
                 />
               </label>
 
-              <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-                  Color
-                </span>
+              <label className="block space-y-1">
+                <span className="block text-xs font-medium text-[var(--muted)]">Warna Label</span>
                 <input
                   name="color"
-                  defaultValue={category.color ?? "#ffb84d"}
+                  defaultValue={category.color ?? "#6366f1"}
                   type="color"
-                  className="h-[54px] w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-2 py-2"
+                  className="h-[42px] w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 cursor-pointer"
                 />
               </label>
             </div>
 
-            <UiButton
-              type="submit"
-              variant="primary"
-            >
-              <Pencil className="h-4 w-4" />
-              Update
-            </UiButton>
+            <div className="flex gap-2 pt-1">
+              <UiButton type="submit" variant="primary" size="sm" className="flex-1 justify-center">
+                <Pencil className="h-3.5 w-3.5" />
+                <span>Simpan</span>
+              </UiButton>
+            </div>
           </form>
 
           <form action={deleteCategoryFormAction}>
             <input type="hidden" name="id" value={category.id} />
             <UiButton
               type="submit"
-              variant="secondary"
+              variant="outline"
+              size="sm"
+              className="w-full justify-center text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 border-rose-500/20"
             >
-              <Trash2 className="h-4 w-4" />
-              Delete
+              <Trash2 className="h-3.5 w-3.5" />
+              <span>Hapus Kategori</span>
             </UiButton>
           </form>
         </div>
@@ -154,69 +174,69 @@ export default async function CategoriesPage() {
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[26px] sm:p-5 lg:flex-row lg:items-end lg:justify-between">
+      {/* Header */}
+      <div className="flex flex-col gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
-            Categories
-          </p>
-          <h2 className="mt-2 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
-            Kategori pribadi
+          <div className="flex items-center gap-2 text-indigo-500 text-xs font-bold uppercase tracking-wider">
+            <Tags className="h-4 w-4" />
+            <span>Category Manager</span>
+          </div>
+          <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
+            Kategori Keuangan
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--retro-muted)]">
-            Tambahkan, edit, dan hapus kategori milikmu sendiri. Semua data ini
-            dipisahkan per user lewat RLS.
+          <p className="mt-1 text-xs sm:text-sm text-[var(--muted)]">
+            Kelola kategori pribadi untuk mempermudah analisis transaksi.
           </p>
         </div>
       </div>
 
+      {/* Add Category Form */}
       <form
         action={createCategoryFormAction}
-        className="space-y-4 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[26px] sm:p-5"
+        className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6 shadow-sm space-y-4"
       >
-        <div className="flex items-center gap-2">
-          <PlusCircle className="h-4 w-4 text-[var(--retro-accent)]" />
-          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
-            Add category
-          </p>
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--foreground)] border-b border-[var(--border)] pb-3">
+          <Plus className="h-4 w-4 text-indigo-500" />
+          <span>Tambah Kategori Baru</span>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2">
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-              Name
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block space-y-1.5">
+            <span className="block text-xs font-semibold text-[var(--muted)]">
+              Nama Kategori <span className="text-rose-500">*</span>
             </span>
-            <UiInput name="name" required className="w-full" placeholder="Makanan" />
+            <UiInput name="name" required className="w-full" placeholder="Contoh: Makanan & Minuman" />
           </label>
 
           <UiSelect
             name="type"
-            label="Type"
+            label="Tipe Kategori"
             defaultValue="expense"
             items={[...typeItems]}
           />
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2">
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-              Icon name
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block space-y-1.5">
+            <span className="block text-xs font-semibold text-[var(--muted)]">
+              Nama Icon (Opsional)
             </span>
             <UiInput
               name="icon"
-              placeholder="ShoppingCart"
+              placeholder="ShoppingCart, Utensils, Wallet, dll"
               className="w-full"
             />
           </label>
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-              Color
+          <label className="block space-y-1.5">
+            <span className="block text-xs font-semibold text-[var(--muted)]">
+              Pilih Warna Badge
             </span>
             <input
               name="color"
               type="color"
-              defaultValue="#ffb84d"
-              className="h-[54px] w-full rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-2 py-2"
+              defaultValue="#6366f1"
+              className="h-[42px] w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 cursor-pointer"
             />
           </label>
         </div>
@@ -224,38 +244,43 @@ export default async function CategoriesPage() {
         <UiButton
           type="submit"
           variant="primary"
+          className="w-full sm:w-auto px-6 justify-center"
         >
-          <PlusCircle className="h-4 w-4" />
-          Save category
+          <Plus className="h-4 w-4" />
+          <span>Simpan Kategori</span>
         </UiButton>
       </form>
 
+      {/* Grouped Category Sections */}
       {(["income", "expense"] as const).map((type) => (
         <section
           key={type}
-          className="space-y-4 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[26px] sm:p-5"
+          className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6 shadow-sm space-y-4"
         >
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
-              {type}
-            </p>
-            <h3 className="mt-2 text-xl font-bold text-[var(--retro-text)] sm:text-2xl">
-              {sectionTitle(type)}
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-[var(--retro-muted)]">
+          <div className="border-b border-[var(--border)] pb-3">
+            <div className="flex items-center gap-2">
+              {type === "income" ? (
+                <ArrowUpRight className="h-5 w-5 text-emerald-500" />
+              ) : (
+                <ArrowDownLeft className="h-5 w-5 text-rose-500" />
+              )}
+              <h3 className="text-lg font-bold tracking-tight text-[var(--foreground)] sm:text-xl">
+                {sectionTitle(type)}
+              </h3>
+            </div>
+            <p className="mt-1 text-xs text-[var(--muted)]">
               {sectionNote(type)}
             </p>
           </div>
 
-          <div className="grid gap-3 lg:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-1">
             {grouped[type].length > 0 ? (
               grouped[type].map((category) => (
                 <CategoryCard key={category.id} category={category} />
               ))
             ) : (
-              <div className="rounded-[20px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-4 text-sm leading-6 text-[var(--retro-muted)] sm:rounded-[22px] sm:p-5">
-                Belum ada kategori {type}. Tambahkan kategori pertama dari form di
-                atas.
+              <div className="col-span-full rounded-2xl border border-dashed border-[var(--border)] p-6 text-center text-xs text-[var(--muted)]">
+                Belum ada kategori {type}. Tambahkan kategori pertama menggunakan form di atas.
               </div>
             )}
           </div>

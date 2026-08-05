@@ -15,7 +15,7 @@ type DatePickerProps = {
   placeholder?: string;
 };
 
-const weekdayLabels = ["M", "T", "W", "T", "F", "S", "S"];
+const weekdayLabels = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
 
 function pad(value: number) {
   return String(value).padStart(2, "0");
@@ -68,7 +68,7 @@ function formatSelected(value: string) {
 
   return new Intl.DateTimeFormat("id-ID", {
     day: "2-digit",
-    month: "long",
+    month: "short",
     year: "numeric",
   }).format(parsed);
 }
@@ -104,8 +104,8 @@ export function DatePickerField({
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
-      <span className="block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+    <div className={cn("space-y-1.5", className)}>
+      <span className="block text-xs font-semibold text-[var(--muted)]">
         {label}
       </span>
 
@@ -113,24 +113,25 @@ export function DatePickerField({
         <div className="relative">
           <Popover.Trigger
             className={cn(
-              "flex w-full items-center justify-between rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] sm:rounded-[16px] sm:px-4 sm:py-3 focus:border-[var(--retro-accent)]",
-              !selectedLabel && "text-[var(--retro-muted)]",
+              "flex w-full items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-left text-sm text-[var(--foreground)] outline-none transition duration-200 hover:border-[var(--border-strong)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 cursor-pointer",
+              !selectedLabel && "text-[var(--muted)]",
             )}
           >
             <span>{selectedLabel || placeholder}</span>
-            <CalendarIcon className="h-4 w-4 text-[var(--retro-muted)]" />
+            <CalendarIcon className="h-4 w-4 text-[var(--muted)]" />
           </Popover.Trigger>
           <input type="hidden" name={name} value={value} />
         </div>
 
         <Popover.Portal>
-          <Popover.Positioner sideOffset={8} className="z-[80]">
-            <Popover.Popup className="w-[min(320px,calc(100vw-2rem))] rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-3 shadow-[10px_10px_0_var(--retro-shadow)] sm:w-[320px] sm:rounded-[22px] sm:p-4">
+          <Popover.Positioner sideOffset={6} className="z-[80]">
+            <Popover.Popup className="w-[min(320px,calc(100vw-2rem))] rounded-2xl border border-[var(--border-strong)] bg-[var(--panel)] p-4 shadow-2xl backdrop-blur-xl">
               <div className="flex items-center justify-between gap-2">
                 <UiButton
                   type="button"
-                  variant="secondary"
-                  className="h-9 w-9 p-0 sm:h-10 sm:w-10"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-lg"
                   onClick={() =>
                     setViewDate(
                       new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1),
@@ -140,14 +141,15 @@ export function DatePickerField({
                   <ChevronLeft className="h-4 w-4" />
                 </UiButton>
 
-                <p className="text-sm font-bold uppercase tracking-[0.18em] text-[var(--retro-text)]">
+                <p className="text-sm font-semibold capitalize text-[var(--foreground)]">
                   {formatMonth(viewDate)}
                 </p>
 
                 <UiButton
                   type="button"
-                  variant="secondary"
-                  className="h-9 w-9 p-0 sm:h-10 sm:w-10"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-lg"
                   onClick={() =>
                     setViewDate(
                       new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1),
@@ -158,16 +160,16 @@ export function DatePickerField({
                 </UiButton>
               </div>
 
-              <div className="mt-4 grid grid-cols-7 gap-2 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--retro-muted)]">
+              <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-[var(--muted)]">
                 {weekdayLabels.map((labelText) => (
-                  <span key={labelText}>{labelText}</span>
+                  <span key={labelText} className="py-1">{labelText}</span>
                 ))}
               </div>
 
-              <div className="mt-3 grid grid-cols-7 gap-2">
+              <div className="mt-1 grid grid-cols-7 gap-1">
                 {days.map((day, index) => {
                   if (!day) {
-                    return <span key={`empty-${index}`} className="h-10" />;
+                    return <span key={`empty-${index}`} className="h-8" />;
                   }
 
                   const isSelected = value === toInputValue(day);
@@ -176,8 +178,12 @@ export function DatePickerField({
                     <UiButton
                       key={day.toISOString()}
                       type="button"
-                      variant={isSelected ? "primary" : "secondary"}
-                      className="h-9 px-0 py-0 text-xs sm:h-10 sm:text-sm"
+                      variant={isSelected ? "primary" : "ghost"}
+                      size="sm"
+                      className={cn(
+                        "h-8 w-8 p-0 rounded-lg text-xs font-medium justify-center mx-auto",
+                        isSelected ? "gradient-primary text-white" : "hover:bg-[var(--surface-hover)]",
+                      )}
                       onClick={() => selectDate(day)}
                     >
                       {day.getDate()}

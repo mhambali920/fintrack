@@ -2,11 +2,13 @@
 
 import { useMemo, useState, useTransition, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { KeyRound, Mail, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { UiButton } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/input";
+import { cn } from "@/lib/cn";
 
-type AuthMode = "magic-link" | "password";
+type AuthMode = "password" | "magic-link";
 
 export function LoginForm() {
   const router = useRouter();
@@ -16,6 +18,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
   const nextPath = useMemo(() => {
     const next = searchParams.get("next");
     return next?.startsWith("/") ? next : "/";
@@ -39,7 +42,7 @@ export function LoginForm() {
         setMessage(
           error
             ? error.message
-            : "Magic link sudah dikirim. Cek inbox email kamu.",
+            : "Tautan masuk (magic link) telah dikirim ke inbox email kamu.",
         );
         return;
       }
@@ -58,7 +61,7 @@ export function LoginForm() {
         setMessage(
           signUpError
             ? signUpError.message
-            : "Akun baru dibuat. Coba login lagi, atau cek email jika perlu verifikasi.",
+            : "Akun baru telah dibuat. Silakan login kembali atau verifikasi email kamu.",
         );
         return;
       }
@@ -69,39 +72,51 @@ export function LoginForm() {
   };
 
   return (
-    <div className="space-y-5 sm:space-y-6">
+    <div className="space-y-6">
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.35em]">
-          Sign in
-        </p>
-        <h2 className="mt-2 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
-          Login or create an account
+        <h2 className="text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
+          Masuk ke FinTrack
         </h2>
+        <p className="mt-1.5 text-xs sm:text-sm text-[var(--muted)]">
+          Kelola transaksi dan pantau finansialmu dengan mudah.
+        </p>
       </div>
 
-      <div className="inline-flex rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
-        <UiButton
+      {/* Mode Switcher Tabs */}
+      <div className="inline-flex w-full rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-1.5 shadow-inner">
+        <button
           type="button"
-          variant={mode === "password" ? "primary" : "ghost"}
-          className="rounded-[12px] px-3 py-2 text-xs shadow-none hover:shadow-none sm:rounded-[14px] sm:px-4 sm:text-sm"
           onClick={() => setMode("password")}
+          className={cn(
+            "flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer select-none",
+            mode === "password"
+              ? "gradient-primary text-white shadow-md"
+              : "text-[var(--muted)] hover:text-[var(--foreground)]",
+          )}
         >
-          Password
-        </UiButton>
-        <UiButton
+          <KeyRound className="h-3.5 w-3.5" />
+          <span>Password</span>
+        </button>
+
+        <button
           type="button"
-          variant={mode === "magic-link" ? "primary" : "ghost"}
-          className="rounded-[12px] px-3 py-2 text-xs shadow-none hover:shadow-none sm:rounded-[14px] sm:px-4 sm:text-sm"
           onClick={() => setMode("magic-link")}
+          className={cn(
+            "flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer select-none",
+            mode === "magic-link"
+              ? "gradient-primary text-white shadow-md"
+              : "text-[var(--muted)] hover:text-[var(--foreground)]",
+          )}
         >
-          Magic Link
-        </UiButton>
+          <Mail className="h-3.5 w-3.5" />
+          <span>Magic Link</span>
+        </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
-        <label className="block">
-          <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.14em]">
-            Email
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block space-y-1.5">
+          <span className="block text-xs font-semibold text-[var(--muted)]">
+            Alamat Email <span className="text-rose-500">*</span>
           </span>
           <UiInput
             type="email"
@@ -109,14 +124,14 @@ export function LoginForm() {
             onChange={(event) => setEmail(event.target.value)}
             required
             className="w-full"
-            placeholder="nama@contoh.com"
+            placeholder="nama@domain.com"
           />
         </label>
 
         {mode === "password" ? (
-          <label className="block">
-            <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.14em]">
-              Password
+          <label className="block space-y-1.5">
+            <span className="block text-xs font-semibold text-[var(--muted)]">
+              Password <span className="text-rose-500">*</span>
             </span>
             <UiInput
               type="password"
@@ -128,26 +143,32 @@ export function LoginForm() {
             />
           </label>
         ) : (
-          <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
-            Mode ini akan mengirim tautan masuk ke email kamu. Pastikan alamat
-            email sudah benar.
-          </p>
+          <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-3.5 text-xs text-[var(--muted)]">
+            Mode Magic Link akan mengirimkan link sekali pakai ke inbox email kamu tanpa perlu password.
+          </div>
         )}
 
         <UiButton
           type="submit"
           variant="primary"
+          size="lg"
           disabled={isPending}
-          className="w-full"
+          className="w-full justify-center"
         >
-          {isPending ? "Processing..." : mode === "magic-link" ? "Send link" : "Continue"}
+          <span>{isPending ? "Memproses..." : mode === "magic-link" ? "Kirim Magic Link" : "Lanjutkan"}</span>
+          <ArrowRight className="h-4 w-4" />
         </UiButton>
       </form>
 
       {message ? (
-        <p className="rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3.5 py-2.5 text-sm leading-6 text-[var(--retro-muted)] sm:px-4 sm:py-3">
-          {message}
-        </p>
+        <div className="flex items-start gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs text-[var(--muted)] leading-relaxed shadow-sm">
+          {message.includes("Gagal") || message.includes("Error") ? (
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
+          ) : (
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
+          )}
+          <span>{message}</span>
+        </div>
       ) : null}
     </div>
   );

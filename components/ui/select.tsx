@@ -50,20 +50,20 @@ export function UiSelect({
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-1.5", className)}>
       <Select.Root
         items={items}
         value={selectedValue || null}
         onValueChange={handleValueChange}
       >
-        <Select.Label className="block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+        <Select.Label className="block text-xs font-semibold text-[var(--muted)]">
           {label}
         </Select.Label>
 
         <div className="relative">
-          <Select.Trigger className="flex w-full items-center justify-between rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] sm:rounded-[16px] sm:px-4 sm:py-3 focus:border-[var(--retro-accent)]">
+          <Select.Trigger className="flex w-full items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-left text-sm text-[var(--foreground)] outline-none transition duration-200 hover:border-[var(--border-strong)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 cursor-pointer">
             <Select.Value placeholder={placeholder} />
-            <Select.Icon className="ml-3 inline-flex text-[var(--retro-muted)]">
+            <Select.Icon className="ml-2 inline-flex text-[var(--muted)]">
               <ChevronDown className="h-4 w-4" />
             </Select.Icon>
           </Select.Trigger>
@@ -72,28 +72,28 @@ export function UiSelect({
         </div>
 
         <Select.Portal>
-          <Select.Positioner sideOffset={8} className="z-[70]">
-            <Select.Popup className="min-w-[var(--base-ui-anchor-width)] rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-2 shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[20px] sm:p-2">
-              <Select.ScrollUpArrow className="flex justify-center px-2 py-2 text-[var(--retro-muted)]">
+          <Select.Positioner sideOffset={6} className="z-[70]">
+            <Select.Popup className="min-w-[var(--base-ui-anchor-width)] overflow-hidden rounded-xl border border-[var(--border-strong)] bg-[var(--panel)] p-1.5 shadow-2xl backdrop-blur-xl">
+              <Select.ScrollUpArrow className="flex justify-center py-1 text-[var(--muted)]">
                 <ChevronUp className="h-4 w-4" />
               </Select.ScrollUpArrow>
 
-              <Select.List className="space-y-1">
+              <Select.List className="space-y-0.5">
                 {items.map((item) => (
                   <Select.Item
                     key={item.value}
                     value={item.value}
-                    className="flex cursor-pointer items-center justify-between rounded-[12px] px-3.5 py-2.5 text-sm text-[var(--retro-text)] outline-none transition hover:bg-[var(--retro-surface)] data-[highlighted]:bg-[var(--retro-surface)] data-[selected]:bg-[var(--retro-surface)] sm:rounded-[14px] sm:px-4 sm:py-3"
+                    className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm text-[var(--foreground)] outline-none transition hover:bg-[var(--surface-hover)] data-[highlighted]:bg-[var(--surface-hover)] data-[selected]:bg-[var(--primary)]/15 data-[selected]:text-[var(--primary)] data-[selected]:font-semibold"
                   >
                     <Select.ItemText>{item.label}</Select.ItemText>
-                    <Select.ItemIndicator className="text-[var(--retro-accent)]">
+                    <Select.ItemIndicator className="text-[var(--primary)]">
                       <Check className="h-4 w-4" />
                     </Select.ItemIndicator>
                   </Select.Item>
                 ))}
               </Select.List>
 
-              <Select.ScrollDownArrow className="flex justify-center px-2 py-2 text-[var(--retro-muted)]">
+              <Select.ScrollDownArrow className="flex justify-center py-1 text-[var(--muted)]">
                 <ChevronDown className="h-4 w-4" />
               </Select.ScrollDownArrow>
             </Select.Popup>

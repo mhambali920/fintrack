@@ -1,33 +1,58 @@
 "use client";
 
 import { useTheme, type ThemePreference } from "@/components/theme-provider";
-import { UiButton } from "@/components/ui/button";
+import { Sun, Moon, Monitor } from "lucide-react";
+import { cn } from "@/lib/cn";
 
-const options: Array<{ value: ThemePreference; label: string }> = [
-  { value: "dark", label: "Dark" },
-  { value: "light", label: "Light" },
-  { value: "system", label: "System" },
+const options: Array<{
+  value: ThemePreference;
+  label: string;
+  icon: typeof Sun;
+}> = [
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "light", label: "Light", icon: Sun },
+  { value: "system", label: "System", icon: Monitor },
 ];
 
-export function ThemeToggle() {
+export function ThemeToggle({
+  showLabel = true,
+  className,
+}: {
+  showLabel?: boolean;
+  className?: string;
+}) {
   const { theme, resolvedTheme, setTheme } = useTheme();
 
   return (
-    <div className="inline-flex rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-1 shadow-[5px_5px_0_var(--retro-shadow)]">
+    <div
+      className={cn(
+        "inline-flex items-center rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 backdrop-blur-md",
+        className,
+      )}
+    >
       {options.map((option) => {
         const active = theme === option.value;
+        const Icon = option.icon;
 
         return (
-          <UiButton
+          <button
             key={option.value}
             type="button"
-            variant={active ? "primary" : "ghost"}
             onClick={() => setTheme(option.value)}
-            className="rounded-[12px] px-2.5 py-1.5 text-[10px] shadow-none hover:shadow-none sm:rounded-[14px] sm:px-3.5 sm:py-2 sm:text-xs"
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200 cursor-pointer select-none",
+              active
+                ? "bg-[var(--primary)] text-white shadow-sm"
+                : "text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]",
+            )}
             aria-pressed={active}
+            title={`Switch to ${option.label} theme`}
           >
-            {option.label}
-          </UiButton>
+            <Icon className="h-3.5 w-3.5" />
+            {showLabel && (
+              <span className="hidden sm:inline">{option.label}</span>
+            )}
+          </button>
         );
       })}
 

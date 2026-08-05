@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Filter, PlusCircle, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Filter, Plus, Trash2, ArrowLeftRight } from "lucide-react";
 import { deleteTransactionFormAction } from "@/app/(dashboard)/actions";
 import { getTransactionsPage } from "@/lib/finance";
 import { TransactionItem } from "@/components/transaction-item";
@@ -15,9 +15,9 @@ type TransactionsPageProps = {
 
 const pageSize = 10;
 const filterTypeItems = [
-  { label: "All", value: "all" },
-  { label: "Income", value: "income" },
-  { label: "Expense", value: "expense" },
+  { label: "All Types", value: "all" },
+  { label: "Income Only", value: "income" },
+  { label: "Expense Only", value: "expense" },
 ] as const;
 
 function getStringParam(
@@ -65,14 +65,6 @@ function buildQueryString(params: Record<string, string | number>) {
   return searchParams.toString();
 }
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
 export default async function TransactionsPage({
   searchParams,
 }: TransactionsPageProps) {
@@ -91,48 +83,47 @@ export default async function TransactionsPage({
     month: result.filters.month,
     type: result.filters.type,
   };
-  const baseQuery = buildQueryString(currentQuery);
 
   return (
-    <section className="space-y-5 sm:space-y-6">
-      <div className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[26px] sm:p-5 lg:flex-row lg:items-end lg:justify-between">
+    <section className="space-y-6">
+      {/* Header Banner */}
+      <div className="flex flex-col gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
-            Transactions
-          </p>
-          <h2 className="mt-2 text-2xl font-bold text-[var(--retro-text)] sm:text-3xl">
-            Riwayat transaksi
+          <div className="flex items-center gap-2 text-indigo-500 text-xs font-bold uppercase tracking-wider">
+            <ArrowLeftRight className="h-4 w-4" />
+            <span>Transaction History</span>
+          </div>
+          <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
+            Riwayat Transaksi
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--retro-muted)]">
-            Menampilkan {result.totalCount} transaksi pada {formatMonthLabel(month)}.
+          <p className="mt-1 text-xs sm:text-sm text-[var(--muted)]">
+            Menampilkan <span className="font-semibold text-[var(--foreground)]">{result.totalCount}</span> transaksi periode <span className="font-semibold text-[var(--foreground)]">{formatMonthLabel(month)}</span>.
           </p>
         </div>
 
         <Link
           href="/transactions/add"
-          className="inline-flex w-fit items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] bg-[var(--retro-accent)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-[var(--retro-ink)] transition hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)] sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em]"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl gradient-primary px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
         >
-          <PlusCircle className="h-4 w-4" />
-          Add transaction
-          <ArrowRight className="h-4 w-4" />
+          <Plus className="h-4 w-4" />
+          <span>Tambah Transaksi</span>
         </Link>
       </div>
 
+      {/* Filter Form Card */}
       <form
         method="get"
-        className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[26px] sm:p-5"
+        className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm space-y-4"
       >
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-[var(--retro-accent)]" />
-          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--retro-accent)] sm:text-sm sm:tracking-[0.3em]">
-            Filter
-          </p>
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--muted)] border-b border-[var(--border)] pb-3">
+          <Filter className="h-4 w-4 text-indigo-500" />
+          <span>Filter & Pencarian</span>
         </div>
 
-        <div className="grid gap-3 lg:grid-cols-[1fr_1fr_auto]">
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
-              Month
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+          <label className="block space-y-1.5">
+            <span className="block text-xs font-semibold text-[var(--muted)]">
+              Pilih Bulan
             </span>
             <UiInput
               type="month"
@@ -144,72 +135,78 @@ export default async function TransactionsPage({
 
           <UiSelect
             name="type"
-            label="Type"
+            label="Tipe Transaksi"
             defaultValue={type}
             items={[...filterTypeItems]}
           />
 
-          <UiButton
-            type="submit"
-            variant="primary"
-            className="mt-auto h-fit w-full lg:w-fit"
-          >
-            Apply filters
-          </UiButton>
+          <div className="flex items-end">
+            <UiButton
+              type="submit"
+              variant="primary"
+              className="w-full lg:w-auto h-[42px] px-6"
+            >
+              Terapkan Filter
+            </UiButton>
+          </div>
         </div>
       </form>
 
+      {/* Transactions List */}
       {result.items.length > 0 ? (
-          <div className="space-y-2.5 sm:space-y-3">
+        <div className="space-y-3">
           {result.items.map((transaction) => (
             <TransactionItem
               key={transaction.id}
               transaction={transaction}
               actions={
-                <div className="flex items-center justify-end">
-                  <form action={deleteTransactionFormAction}>
-                    <input type="hidden" name="id" value={transaction.id} />
-                    <UiButton
-                      type="submit"
-                      variant="secondary"
-                      className="rounded-[14px] px-3 py-2 text-xs"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Delete
-                    </UiButton>
-                  </form>
-                </div>
+                <form action={deleteTransactionFormAction}>
+                  <input type="hidden" name="id" value={transaction.id} />
+                  <UiButton
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    className="text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 rounded-xl"
+                    title="Hapus Transaksi"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only sm:not-sr-only text-xs">Hapus</span>
+                  </UiButton>
+                </form>
               }
             />
           ))}
         </div>
       ) : (
-        <div className="rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 text-sm leading-6 text-[var(--retro-muted)] shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[26px] sm:p-5">
-          Tidak ada transaksi untuk filter ini. Coba ubah bulan atau tipe,
-          atau tambahkan transaksi baru.
+        <div className="rounded-3xl border border-dashed border-[var(--border)] p-10 text-center bg-[var(--surface)]">
+          <p className="text-sm text-[var(--muted)]">
+            Tidak ada transaksi untuk filter ini. Coba sesuaikan pilihan bulan atau tipe transaksi.
+          </p>
         </div>
       )}
 
-      <div className="flex flex-col gap-3 rounded-[24px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-4 shadow-[10px_10px_0_var(--retro-shadow)] sm:flex-row sm:items-center sm:justify-between sm:rounded-[26px] sm:p-5">
-        <p className="text-sm leading-6 text-[var(--retro-muted)]">
-          Page {result.page} of {result.totalPages} · {result.totalCount} total
+      {/* Pagination Footer */}
+      <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:flex-row sm:items-center sm:justify-between shadow-sm">
+        <p className="text-xs text-[var(--muted)]">
+          Halaman <span className="font-semibold text-[var(--foreground)]">{result.page}</span> dari{" "}
+          <span className="font-semibold text-[var(--foreground)]">{result.totalPages}</span> · Total {result.totalCount} data
         </p>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex items-center gap-2">
           <Link
             href={`?${buildQueryString({
               ...currentQuery,
               page: Math.max(1, result.page - 1),
             })}`}
             aria-disabled={result.page <= 1}
-            className={`inline-flex items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em] ${
+            className={`inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] px-3.5 py-2 text-xs font-semibold transition ${
               result.page <= 1
-                ? "pointer-events-none bg-[var(--retro-surface)] text-[var(--retro-muted)] opacity-60"
-                : "bg-[var(--retro-surface)] text-[var(--retro-text)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+                ? "pointer-events-none opacity-40 text-[var(--muted)]"
+                : "bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] active:scale-95"
             }`}
           >
-            <ArrowLeft className="h-4 w-4" />
-            Prev
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Prev</span>
           </Link>
 
           <Link
@@ -218,14 +215,14 @@ export default async function TransactionsPage({
               page: Math.min(result.totalPages, result.page + 1),
             })}`}
             aria-disabled={result.page >= result.totalPages}
-            className={`inline-flex items-center gap-2 rounded-[16px] border-2 border-[var(--retro-border)] px-3.5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition sm:rounded-[18px] sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.14em] ${
+            className={`inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] px-3.5 py-2 text-xs font-semibold transition ${
               result.page >= result.totalPages
-                ? "pointer-events-none bg-[var(--retro-surface)] text-[var(--retro-muted)] opacity-60"
-                : "bg-[var(--retro-surface)] text-[var(--retro-text)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_var(--retro-shadow)]"
+                ? "pointer-events-none opacity-40 text-[var(--muted)]"
+                : "bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] active:scale-95"
             }`}
           >
-            Next
-            <ArrowRight className="h-4 w-4" />
+            <span>Next</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>

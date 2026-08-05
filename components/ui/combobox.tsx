@@ -51,10 +51,10 @@ export function UiCombobox({
   }, [items, query]);
 
   const isControlled = value !== undefined;
-  const inputPlaceholder = searchPlaceholder ?? `Search ${label.toLowerCase()}`;
+  const inputPlaceholder = searchPlaceholder ?? `Search ${label.toLowerCase()}...`;
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-1.5", className)}>
       <Combobox.Root
         items={items}
         value={isControlled ? selectedValue || null : undefined}
@@ -76,7 +76,7 @@ export function UiCombobox({
         }}
         autoHighlight
       >
-        <Combobox.Label className="block text-sm font-semibold uppercase tracking-[0.14em] text-[var(--retro-accent)]">
+        <Combobox.Label className="block text-xs font-semibold text-[var(--muted)]">
           {label}
         </Combobox.Label>
 
@@ -84,13 +84,13 @@ export function UiCombobox({
           <Combobox.Trigger
             type="button"
             className={cn(
-              "flex w-full items-center justify-between rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] px-3.5 py-2.5 text-left text-[var(--retro-text)] outline-none transition hover:translate-x-[1px] hover:translate-y-[1px] sm:rounded-[16px] sm:px-4 sm:py-3 focus:border-[var(--retro-accent)]",
+              "flex w-full items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-left text-sm text-[var(--foreground)] outline-none transition duration-200 hover:border-[var(--border-strong)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 cursor-pointer",
             )}
           >
             <Combobox.Value placeholder={placeholder} />
           </Combobox.Trigger>
 
-          <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[var(--retro-muted)]">
+          <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[var(--muted)]">
             <ChevronDown className="h-4 w-4" />
           </div>
         </div>
@@ -98,24 +98,24 @@ export function UiCombobox({
         <input type="hidden" name={name} value={selectedValue} />
 
         <Combobox.Portal>
-          <Combobox.Positioner sideOffset={8} className="z-[70]">
-            <Combobox.Popup className="w-[min(100vw-1.5rem,var(--base-ui-anchor-width))] rounded-[18px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel)] p-2 shadow-[10px_10px_0_var(--retro-shadow)] sm:rounded-[20px] sm:p-3">
-              <div className="flex items-center gap-2 rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] px-3 py-2">
-                <Search className="h-4 w-4 shrink-0 text-[var(--retro-muted)]" />
+          <Combobox.Positioner sideOffset={6} className="z-[70]">
+            <Combobox.Popup className="w-[min(calc(100vw-2rem),var(--base-ui-anchor-width))] overflow-hidden rounded-xl border border-[var(--border-strong)] bg-[var(--panel)] p-2 shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
+                <Search className="h-4 w-4 shrink-0 text-[var(--muted)]" />
                 <Combobox.Input
                   autoComplete="off"
                   placeholder={inputPlaceholder}
-                  className="w-full bg-transparent text-sm text-[var(--retro-text)] outline-none placeholder:text-[var(--retro-muted)]"
+                  className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
                 />
               </div>
 
-              <div className="mt-2 max-h-72 overflow-y-auto">
-                <Combobox.List className="space-y-1">
+              <div className="mt-2 max-h-60 overflow-y-auto">
+                <Combobox.List className="space-y-0.5">
                   {filteredItems.map((item) => (
                     <Combobox.Item
                       key={item.value}
                       value={item.value}
-                      className="cursor-pointer rounded-[12px] px-3.5 py-2.5 text-sm text-[var(--retro-text)] outline-none transition hover:bg-[var(--retro-surface)] data-[highlighted]:bg-[var(--retro-surface)] data-[selected]:bg-[var(--retro-surface)] sm:rounded-[14px] sm:px-4 sm:py-3"
+                      className="cursor-pointer rounded-lg px-3 py-2 text-sm text-[var(--foreground)] outline-none transition hover:bg-[var(--surface-hover)] data-[highlighted]:bg-[var(--surface-hover)] data-[selected]:bg-[var(--primary)]/15 data-[selected]:text-[var(--primary)] data-[selected]:font-semibold"
                     >
                       {item.label}
                     </Combobox.Item>
@@ -123,7 +123,7 @@ export function UiCombobox({
                 </Combobox.List>
 
                 {filteredItems.length === 0 ? (
-                  <p className="px-3.5 py-3 text-sm text-[var(--retro-muted)]">
+                  <p className="px-3 py-3 text-center text-xs text-[var(--muted)]">
                     {emptyText}
                   </p>
                 ) : null}

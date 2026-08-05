@@ -1,4 +1,4 @@
-import { ArrowDownLeft, ArrowUpRight, CircleDot } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Calendar } from "lucide-react";
 import type { ReactNode } from "react";
 import type { TransactionRecord } from "@/lib/finance";
 
@@ -22,7 +22,7 @@ const dateFormatter = new Intl.DateTimeFormat("id-ID", {
 function getCategoryColor(color: string | null) {
   return color && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color)
     ? color
-    : "var(--retro-accent)";
+    : "#6366f1";
 }
 
 export function TransactionItem({ transaction, actions }: TransactionItemProps) {
@@ -34,47 +34,56 @@ export function TransactionItem({ transaction, actions }: TransactionItemProps) 
   const color = getCategoryColor(transaction.category?.color ?? null);
 
   return (
-    <article className="flex items-start gap-3 rounded-[20px] border-2 border-[var(--retro-border)] bg-[var(--retro-surface)] p-3.5 shadow-[5px_5px_0_var(--retro-shadow)] sm:gap-4 sm:rounded-[22px] sm:p-4">
-      <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border-2 border-[var(--retro-border)] bg-[var(--retro-panel-strong)] sm:h-12 sm:w-12 sm:rounded-[16px]"
-        style={{ color }}
-      >
-        {transaction.category?.icon ? (
-          <span className="text-xs font-bold uppercase sm:text-sm">
-            {transaction.category.icon.slice(0, 2)}
-          </span>
-        ) : isIncome ? (
-          <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5" />
-        ) : (
-          <ArrowDownLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-        )}
+    <article
+      className={"glass-card glass-card-hover flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl p-4 sm:p-5 transition-transform duration-300 hover:-translate-y-1"}
+    >
+      {/* Category Badge */}
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 shadow-inner transition-transform group-hover:scale-105"
+          style={{
+            backgroundColor: `${color}18`,
+            color: color,
+            borderColor: `${color}30`,
+          }}
+        >
+          {transaction.category?.icon ? (
+            <span className="text-xs font-bold uppercase">
+              {transaction.category.icon.slice(0, 2)}
+            </span>
+          ) : isIncome ? (
+            <ArrowUpRight className="h-5 w-5 text-emerald-500" />
+          ) : (
+            <ArrowDownLeft className="h-5 w-5 text-rose-500" />
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-[var(--foreground)]">
+            {transaction.description || categoryName}
+          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[var(--muted)]">
+            <span
+              className="inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold border"
+              style={{
+                backgroundColor: `${color}12`,
+                color: color,
+                borderColor: `${color}25`,
+              }}
+            >
+              {categoryName}
+            </span>
+            <span className="flex items-center gap-1 text-[11px] text-[var(--muted)]">
+              <Calendar className="h-3 w-3" />
+              {dateFormatter.format(new Date(transaction.date))}
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-[var(--retro-text)] sm:text-base">
-              {transaction.description || categoryName}
-            </p>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-[var(--retro-muted)] sm:gap-2 sm:text-sm">
-              <CircleDot className="h-3 w-3" style={{ color }} />
-              <span className="truncate">{categoryName}</span>
-              <span className="text-[var(--retro-muted)]">•</span>
-              <span>{dateFormatter.format(new Date(transaction.date))}</span>
-            </p>
-          </div>
-          <p
-            className={`text-right text-sm font-bold sm:text-base ${
-              isIncome
-                ? "text-[var(--retro-accent)]"
-                : "text-[var(--retro-accent-strong)]"
-            }`}
-          >
-            {amountLabel}
-          </p>
-        </div>
-
-        {actions ? <div className="relative z-10 mt-3 sm:mt-4">{actions}</div> : null}
+      {/* Amount and Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+        <p className={`text-base font-extrabold ${isIncome ? "text-emerald-500" : "text-rose-500"}`}>{amountLabel}</p>
+        {actions && <div className="shrink-0">{actions}</div>}
       </div>
     </article>
   );
