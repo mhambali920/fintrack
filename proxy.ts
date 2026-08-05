@@ -16,7 +16,7 @@ function getSupabaseEnv() {
   return { supabaseUrl, supabasePublishableKey };
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { supabaseUrl, supabasePublishableKey } = getSupabaseEnv();
   const response = NextResponse.next({
     request: {
