@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
+import LoadingOverlay from "@/components/loading-overlay";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,9 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+}: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="id" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
@@ -24,7 +23,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <LoadingOverlay />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
