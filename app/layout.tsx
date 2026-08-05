@@ -7,6 +7,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "FinTrack | Keuangan Pribadi AI Pro",
   description: "Personal finance tracker built with Next.js, Supabase, and AI Smart Assistant.",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

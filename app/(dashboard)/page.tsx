@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowDownLeft, ArrowUpRight, Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { getDashboardOverview } from "@/lib/finance";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { TransactionItem } from "@/components/transaction-item";
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
         <div className="flex justify-between items-center text-sm bg-white/40 rounded-2xl p-4 backdrop-blur-md relative z-10 border border-white/50 shadow-sm">
           <div>
             <div className="flex items-center gap-1 mb-1">
-              <ArrowDownLeft className="w-4 h-4 text-emerald-700" />
+              <TrendingDown className="w-4 h-4 text-emerald-700" />
               <p className="text-xs font-semibold text-gray-700">Pemasukan</p>
             </div>
             <p className="font-bold text-emerald-800 text-sm sm:text-base">
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
 
           <div className="text-right">
             <div className="flex items-center justify-end gap-1 mb-1">
-              <ArrowUpRight className="w-4 h-4 text-rose-600" />
+              <TrendingUp className="w-4 h-4 text-rose-600" />
               <p className="text-xs font-semibold text-gray-700">Pengeluaran</p>
             </div>
             <p className="font-bold text-rose-600 text-sm sm:text-base">
