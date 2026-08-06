@@ -56,7 +56,7 @@ export default async function DashboardPage() {
       {/* Top Greeting Header (Reference HTML Style) */}
       <div className="flex justify-between items-center pt-2 pb-1">
         <div>
-          <p className="text-xs text-[var(--muted)] font-medium capitalize">
+          <p className="text-xs text-muted font-medium capitalize">
             {formatCurrentDate()}
           </p>
           <h1 className="text-2xl font-bold text-[var(--foreground)] mt-0.5">
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="rounded-3xl border border-dashed border-[var(--border)] p-8 text-center bg-[var(--surface)]">
-            <p className="text-sm text-[var(--muted)] mb-3">
+            <p className="text-sm text-muted mb-3">
               Belum ada transaksiRecorded. Mulai catat transaksi pertama Anda.
             </p>
             <Link

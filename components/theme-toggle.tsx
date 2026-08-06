@@ -43,7 +43,7 @@ export function ThemeToggle({
               "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200 cursor-pointer select-none",
               active
                 ? "bg-[var(--primary)] text-white shadow-sm"
-                : "text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]",
+                : "text-muted hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)]",
             )}
             aria-pressed={active}
             title={`Switch to ${option.label} theme`}

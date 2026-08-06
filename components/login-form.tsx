@@ -97,7 +97,7 @@ export function LoginForm() {
             "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-shadow duration-200 select-none",
             mode === "password"
               ? "gradient-primary border border-gray-100 shadow-md dark:border-gray-800/30"
-              : "text-[var(--muted)] hover:text-[var(--foreground)]",
+              : "text-muted hover:text-[var(--foreground)]",
           )}
         >
           <KeyRound className="h-3.5 w-3.5" />
@@ -111,7 +111,7 @@ export function LoginForm() {
             "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-shadow duration-200 select-none",
             mode === "magic-link"
               ? "gradient-primary border border-gray-100 shadow-md dark:border-gray-800/30"
-              : "text-[var(--muted)] hover:text-[var(--foreground)]",
+              : "text-muted hover:text-[var(--foreground)]",
           )}
         >
           <Mail className="h-3.5 w-3.5" />
@@ -121,7 +121,7 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <label className="block space-y-1.5">
-          <span className="block text-xs font-semibold text-[var(--muted)]">
+          <span className="block text-xs font-semibold text-muted">
             Alamat Email <span className="text-rose-500">*</span>
           </span>
           <UiInput
@@ -136,7 +136,7 @@ export function LoginForm() {
 
         {mode === "password" ? (
           <label className="block space-y-1.5">
-            <span className="block text-xs font-semibold text-[var(--muted)]">
+            <span className="block text-xs font-semibold text-muted">
               Password <span className="text-rose-500">*</span>
             </span>
             <UiInput
@@ -149,7 +149,7 @@ export function LoginForm() {
             />
           </label>
         ) : (
-          <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-3.5 text-xs text-[var(--muted)]">
+          <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-3.5 text-xs text-muted">
             Mode Magic Link akan mengirimkan link sekali pakai ke inbox email
             kamu tanpa perlu password.
           </div>
@@ -174,7 +174,7 @@ export function LoginForm() {
       </form>
 
       {message ? (
-        <div className="flex items-start gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs leading-relaxed text-[var(--muted)] shadow-sm">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs leading-relaxed text-muted shadow-sm">
           {message.includes("Gagal") || message.includes("Error") ? (
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
           ) : (

@@ -40,7 +40,10 @@ function getMonthDays(viewDate: Date) {
   const firstDayOfMonth = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const startOffset = (firstDayOfMonth.getDay() + 6) % 7;
-  const cells: Array<Date | null> = Array.from({ length: startOffset }, () => null);
+  const cells: Array<Date | null> = Array.from(
+    { length: startOffset },
+    () => null,
+  );
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     cells.push(new Date(year, month, day));
@@ -90,7 +93,9 @@ export function DatePickerField({
   React.useEffect(() => {
     const nextSelected = parseInputValue(value);
     if (nextSelected) {
-      setViewDate(new Date(nextSelected.getFullYear(), nextSelected.getMonth(), 1));
+      setViewDate(
+        new Date(nextSelected.getFullYear(), nextSelected.getMonth(), 1),
+      );
     }
   }, [value]);
 
@@ -105,43 +110,45 @@ export function DatePickerField({
 
   return (
     <div className={cn("space-y-1.5", className)}>
-      <span className="block text-xs font-semibold text-[var(--muted)]">
-        {label}
-      </span>
+      <span className="text-muted block text-xs font-semibold">{label}</span>
 
       <Popover.Root open={open} onOpenChange={setOpen}>
         <div className="relative">
           <Popover.Trigger
             className={cn(
-              "flex w-full items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-left text-sm text-[var(--foreground)] outline-none transition duration-200 hover:border-[var(--border-strong)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 cursor-pointer",
-              !selectedLabel && "text-[var(--muted)]",
+              "flex w-full cursor-pointer items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-left text-sm text-[var(--foreground)] transition duration-200 outline-none hover:border-[var(--border-strong)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20",
+              !selectedLabel && "text-muted",
             )}
           >
             <span>{selectedLabel || placeholder}</span>
-            <CalendarIcon className="h-4 w-4 text-[var(--muted)]" />
+            <CalendarIcon className="text-muted h-4 w-4" />
           </Popover.Trigger>
           <input type="hidden" name={name} value={value} />
         </div>
 
         <Popover.Portal>
-          <Popover.Positioner sideOffset={6} className="z-[80]">
+          <Popover.Positioner sideOffset={6} className="z-200">
             <Popover.Popup className="w-[min(320px,calc(100vw-2rem))] rounded-2xl border border-[var(--border-strong)] bg-[var(--panel)] p-4 shadow-2xl backdrop-blur-xl">
               <div className="flex items-center justify-between gap-2">
                 <UiButton
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 rounded-lg"
+                  className="h-8 w-8 rounded-lg p-0"
                   onClick={() =>
                     setViewDate(
-                      new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1),
+                      new Date(
+                        viewDate.getFullYear(),
+                        viewDate.getMonth() - 1,
+                        1,
+                      ),
                     )
                   }
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </UiButton>
 
-                <p className="text-sm font-semibold capitalize text-[var(--foreground)]">
+                <p className="text-sm font-semibold text-[var(--foreground)] capitalize">
                   {formatMonth(viewDate)}
                 </p>
 
@@ -149,10 +156,14 @@ export function DatePickerField({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 rounded-lg"
+                  className="h-8 w-8 rounded-lg p-0"
                   onClick={() =>
                     setViewDate(
-                      new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1),
+                      new Date(
+                        viewDate.getFullYear(),
+                        viewDate.getMonth() + 1,
+                        1,
+                      ),
                     )
                   }
                 >
@@ -160,9 +171,11 @@ export function DatePickerField({
                 </UiButton>
               </div>
 
-              <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-[var(--muted)]">
+              <div className="text-muted mt-3 grid grid-cols-7 gap-1 text-center text-[11px] font-medium">
                 {weekdayLabels.map((labelText) => (
-                  <span key={labelText} className="py-1">{labelText}</span>
+                  <span key={labelText} className="py-1">
+                    {labelText}
+                  </span>
                 ))}
               </div>
 
@@ -181,8 +194,10 @@ export function DatePickerField({
                       variant={isSelected ? "primary" : "ghost"}
                       size="sm"
                       className={cn(
-                        "h-8 w-8 p-0 rounded-lg text-xs font-medium justify-center mx-auto",
-                        isSelected ? "gradient-primary text-white" : "hover:bg-[var(--surface-hover)]",
+                        "mx-auto h-8 w-8 justify-center rounded-lg p-0 text-xs font-medium",
+                        isSelected
+                          ? "gradient-primary dark:text-white"
+                          : "hover:bg-[var(--surface-hover)]",
                       )}
                       onClick={() => selectDate(day)}
                     >

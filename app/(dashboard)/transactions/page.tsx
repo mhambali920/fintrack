@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Filter, Plus, Trash2, ArrowLeftRight } from "lucide-react";
-import { deleteTransactionFormAction } from "@/app/(dashboard)/actions";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Filter,
+  Plus,
+  ArrowLeftRight,
+} from "lucide-react";
 import { getTransactionsPage } from "@/lib/finance";
-import { TransactionItem } from "@/components/transaction-item";
+import { TransactionsList } from "@/components/transactions-list";
 import { UiButton } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/input";
 import { UiSelect } from "@/components/ui/select";
@@ -26,7 +31,9 @@ function getStringParam(
   fallback: string,
 ) {
   const value = params[key];
-  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+  return typeof value === "string" && value.trim().length > 0
+    ? value
+    : fallback;
 }
 
 function getNumberParam(
@@ -70,7 +77,8 @@ export default async function TransactionsPage({
 }: TransactionsPageProps) {
   const params = (await searchParams) ?? {};
   const month = getStringParam(params, "month", currentMonth());
-  const type = getStringParam(params, "type", "all") as "all" | "income" | "expense";
+  const type = getStringParam(params, "type", "all") as
+    "all" | "income" | "expense";
   const page = getNumberParam(params, "page", 1);
   const result = await getTransactionsPage({
     month,
@@ -89,21 +97,29 @@ export default async function TransactionsPage({
       {/* Header Banner */}
       <div className="flex flex-col gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2 text-indigo-500 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-indigo-500 uppercase">
             <ArrowLeftRight className="h-4 w-4" />
             <span>Transaction History</span>
           </div>
           <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
             Riwayat Transaksi
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-[var(--muted)]">
-            Menampilkan <span className="font-semibold text-[var(--foreground)]">{result.totalCount}</span> transaksi periode <span className="font-semibold text-[var(--foreground)]">{formatMonthLabel(month)}</span>.
+          <p className="text-muted mt-1 text-xs sm:text-sm">
+            Menampilkan{" "}
+            <span className="font-semibold text-[var(--foreground)]">
+              {result.totalCount}
+            </span>{" "}
+            transaksi periode{" "}
+            <span className="font-semibold text-[var(--foreground)]">
+              {formatMonthLabel(month)}
+            </span>
+            .
           </p>
         </div>
 
         <Link
           href="/transactions/add"
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl gradient-primary px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+          className="hidden shrink-0 items-center justify-center gap-2 rounded-2xl border border-gray-200 px-5 py-3 text-sm font-bold text-white shadow-md shadow-indigo-500/20 transition-transform hover:scale-[1.02] active:scale-[0.98] sm:inline-flex dark:border-gray-800/50"
         >
           <Plus className="h-4 w-4" />
           <span>Tambah Transaksi</span>
@@ -113,16 +129,16 @@ export default async function TransactionsPage({
       {/* Filter Form Card */}
       <form
         method="get"
-        className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm space-y-4"
+        className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm"
       >
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--muted)] border-b border-[var(--border)] pb-3">
+        <div className="text-muted flex items-center gap-2 border-b border-[var(--border)] pb-3 text-xs font-bold tracking-wider uppercase">
           <Filter className="h-4 w-4 text-indigo-500" />
           <span>Filter & Pencarian</span>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
           <label className="block space-y-1.5">
-            <span className="block text-xs font-semibold text-[var(--muted)]">
+            <span className="text-muted block text-xs font-semibold">
               Pilih Bulan
             </span>
             <UiInput
@@ -144,7 +160,7 @@ export default async function TransactionsPage({
             <UiButton
               type="submit"
               variant="primary"
-              className="w-full lg:w-auto h-[42px] px-6"
+              className="h-10.5 w-full px-6 md:mb-2 lg:w-auto"
             >
               Terapkan Filter
             </UiButton>
@@ -154,42 +170,28 @@ export default async function TransactionsPage({
 
       {/* Transactions List */}
       {result.items.length > 0 ? (
-        <div className="space-y-3">
-          {result.items.map((transaction) => (
-            <TransactionItem
-              key={transaction.id}
-              transaction={transaction}
-              actions={
-                <form action={deleteTransactionFormAction}>
-                  <input type="hidden" name="id" value={transaction.id} />
-                  <UiButton
-                    type="submit"
-                    variant="ghost"
-                    size="sm"
-                    className="text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 rounded-xl"
-                    title="Hapus Transaksi"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only sm:not-sr-only text-xs">Hapus</span>
-                  </UiButton>
-                </form>
-              }
-            />
-          ))}
-        </div>
+        <TransactionsList items={result.items} />
       ) : (
-        <div className="rounded-3xl border border-dashed border-[var(--border)] p-10 text-center bg-[var(--surface)]">
-          <p className="text-sm text-[var(--muted)]">
-            Tidak ada transaksi untuk filter ini. Coba sesuaikan pilihan bulan atau tipe transaksi.
+        <div className="rounded-3xl border border-dashed border-[var(--border)] bg-[var(--surface)] p-10 text-center">
+          <p className="text-muted text-sm">
+            Tidak ada transaksi untuk filter ini. Coba sesuaikan pilihan bulan
+            atau tipe transaksi.
           </p>
         </div>
       )}
 
       {/* Pagination Footer */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:flex-row sm:items-center sm:justify-between shadow-sm">
-        <p className="text-xs text-[var(--muted)]">
-          Halaman <span className="font-semibold text-[var(--foreground)]">{result.page}</span> dari{" "}
-          <span className="font-semibold text-[var(--foreground)]">{result.totalPages}</span> · Total {result.totalCount} data
+      <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-muted text-xs">
+          Halaman{" "}
+          <span className="font-semibold text-[var(--foreground)]">
+            {result.page}
+          </span>{" "}
+          dari{" "}
+          <span className="font-semibold text-[var(--foreground)]">
+            {result.totalPages}
+          </span>{" "}
+          · Total {result.totalCount} data
         </p>
 
         <div className="flex items-center gap-2">
@@ -201,7 +203,7 @@ export default async function TransactionsPage({
             aria-disabled={result.page <= 1}
             className={`inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] px-3.5 py-2 text-xs font-semibold transition ${
               result.page <= 1
-                ? "pointer-events-none opacity-40 text-[var(--muted)]"
+                ? "text-muted pointer-events-none opacity-40"
                 : "bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] active:scale-95"
             }`}
           >
@@ -217,7 +219,7 @@ export default async function TransactionsPage({
             aria-disabled={result.page >= result.totalPages}
             className={`inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] px-3.5 py-2 text-xs font-semibold transition ${
               result.page >= result.totalPages
-                ? "pointer-events-none opacity-40 text-[var(--muted)]"
+                ? "text-muted pointer-events-none opacity-40"
                 : "bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] active:scale-95"
             }`}
           >

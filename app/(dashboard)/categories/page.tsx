@@ -74,7 +74,7 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
             <h4 className="truncate text-base font-bold text-[var(--foreground)]">
               {category.name}
             </h4>
-            <p className="text-[11px] text-[var(--muted)]">
+            <p className="text-[11px] text-muted">
               {category.icon ? `Icon: ${category.icon}` : "Standard icon"}
             </p>
           </div>
@@ -94,7 +94,7 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
 
       {/* Edit Accordion */}
       <details className="mt-4 pt-3 border-t border-[var(--border)] group/details">
-        <summary className="cursor-pointer list-none flex items-center justify-between text-xs font-semibold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+        <summary className="cursor-pointer list-none flex items-center justify-between text-xs font-semibold text-muted hover:text-[var(--foreground)] transition-colors">
           <span className="inline-flex items-center gap-1.5">
             <Pencil className="h-3.5 w-3.5 text-indigo-500" />
             Edit Kategori
@@ -108,7 +108,7 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
 
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block space-y-1">
-                <span className="block text-xs font-medium text-[var(--muted)]">Nama</span>
+                <span className="block text-xs font-medium text-muted">Nama</span>
                 <UiInput name="name" defaultValue={category.name} className="w-full" />
               </label>
 
@@ -122,7 +122,7 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
 
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block space-y-1">
-                <span className="block text-xs font-medium text-[var(--muted)]">Icon Name</span>
+                <span className="block text-xs font-medium text-muted">Icon Name</span>
                 <UiInput
                   name="icon"
                   defaultValue={category.icon ?? ""}
@@ -132,7 +132,7 @@ function CategoryCard({ category }: { category: CategoryRecord }) {
               </label>
 
               <label className="block space-y-1">
-                <span className="block text-xs font-medium text-[var(--muted)]">Warna Label</span>
+                <span className="block text-xs font-medium text-muted">Warna Label</span>
                 <input
                   name="color"
                   defaultValue={category.color ?? "#6366f1"}
@@ -184,7 +184,7 @@ export default async function CategoriesPage() {
           <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
             Kategori Keuangan
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-[var(--muted)]">
+          <p className="mt-1 text-xs sm:text-sm text-muted">
             Kelola kategori pribadi untuk mempermudah analisis transaksi.
           </p>
         </div>
@@ -202,7 +202,7 @@ export default async function CategoriesPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block space-y-1.5">
-            <span className="block text-xs font-semibold text-[var(--muted)]">
+            <span className="block text-xs font-semibold text-muted">
               Nama Kategori <span className="text-rose-500">*</span>
             </span>
             <UiInput name="name" required className="w-full" placeholder="Contoh: Makanan & Minuman" />
@@ -218,7 +218,7 @@ export default async function CategoriesPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block space-y-1.5">
-            <span className="block text-xs font-semibold text-[var(--muted)]">
+            <span className="block text-xs font-semibold text-muted">
               Nama Icon (Opsional)
             </span>
             <UiInput
@@ -229,7 +229,7 @@ export default async function CategoriesPage() {
           </label>
 
           <label className="block space-y-1.5">
-            <span className="block text-xs font-semibold text-[var(--muted)]">
+            <span className="block text-xs font-semibold text-muted">
               Pilih Warna Badge
             </span>
             <input
@@ -268,7 +268,7 @@ export default async function CategoriesPage() {
                 {sectionTitle(type)}
               </h3>
             </div>
-            <p className="mt-1 text-xs text-[var(--muted)]">
+            <p className="mt-1 text-xs text-muted">
               {sectionNote(type)}
             </p>
           </div>
@@ -279,7 +279,7 @@ export default async function CategoriesPage() {
                 <CategoryCard key={category.id} category={category} />
               ))
             ) : (
-              <div className="col-span-full rounded-2xl border border-dashed border-[var(--border)] p-6 text-center text-xs text-[var(--muted)]">
+              <div className="col-span-full rounded-2xl border border-dashed border-[var(--border)] p-6 text-center text-xs text-muted">
                 Belum ada kategori {type}. Tambahkan kategori pertama menggunakan form di atas.
               </div>
             )}

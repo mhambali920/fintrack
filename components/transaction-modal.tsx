@@ -12,7 +12,11 @@ type TransactionModalProps = {
   initialCategories: CategoryRecord[];
 };
 
-export function TransactionModal({ open, onClose, initialCategories }: TransactionModalProps) {
+export function TransactionModal({
+  open,
+  onClose,
+  initialCategories,
+}: TransactionModalProps) {
   useEffect(() => {
     if (!open) return;
 
@@ -35,21 +39,23 @@ export function TransactionModal({ open, onClose, initialCategories }: Transacti
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[100] flex flex-col justify-end bg-gray-900/60 backdrop-blur-sm transition-opacity duration-300",
-        open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
+        "fixed inset-0 z-100 flex flex-col justify-end bg-gray-900/60 backdrop-blur-sm transition-opacity duration-300",
+        open
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0",
       )}
     >
       <div className="flex-1" onClick={onClose} />
 
-      <div className="bg-[var(--card)] rounded-t-3xl p-4 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto hide-scroll border-t border-[var(--border)] animate-fadeIn">
-        <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-4" />
+      <div className="hide-scroll animate-fadeIn bg-card border-border relative max-h-[92vh] overflow-y-auto rounded-t-3xl border-t p-4 shadow-2xl sm:p-6">
+        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-gray-300 dark:bg-gray-700" />
 
-        <div className="flex items-center justify-between mb-2 px-2">
-          <h3 className="text-lg font-bold text-[var(--foreground)]">Transaksi Baru</h3>
+        <div className="mb-2 flex items-center justify-between px-2">
+          <h3 className="text-foreground text-lg font-bold">Transaksi Baru</h3>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 bg-[var(--muted-bg)] text-[var(--muted)] hover:text-[var(--foreground)] rounded-full transition-colors"
+            className="rounded-full bg-[var(--muted-bg)] p-1.5 text-muted transition-colors hover:text-foreground"
           >
             <X className="h-5 w-5" />
           </button>

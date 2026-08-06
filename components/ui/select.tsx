@@ -56,14 +56,14 @@ export function UiSelect({
         value={selectedValue || null}
         onValueChange={handleValueChange}
       >
-        <Select.Label className="block text-xs font-semibold text-[var(--muted)]">
+        <Select.Label className="block text-xs font-semibold text-muted">
           {label}
         </Select.Label>
 
         <div className="relative">
           <Select.Trigger className="flex w-full items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-left text-sm text-[var(--foreground)] outline-none transition duration-200 hover:border-[var(--border-strong)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 cursor-pointer">
             <Select.Value placeholder={placeholder} />
-            <Select.Icon className="ml-2 inline-flex text-[var(--muted)]">
+            <Select.Icon className="ml-2 inline-flex text-muted">
               <ChevronDown className="h-4 w-4" />
             </Select.Icon>
           </Select.Trigger>
@@ -74,7 +74,7 @@ export function UiSelect({
         <Select.Portal>
           <Select.Positioner sideOffset={6} className="z-[70]">
             <Select.Popup className="min-w-[var(--base-ui-anchor-width)] overflow-hidden rounded-xl border border-[var(--border-strong)] bg-[var(--panel)] p-1.5 shadow-2xl backdrop-blur-xl">
-              <Select.ScrollUpArrow className="flex justify-center py-1 text-[var(--muted)]">
+              <Select.ScrollUpArrow className="flex justify-center py-1 text-muted">
                 <ChevronUp className="h-4 w-4" />
               </Select.ScrollUpArrow>
 
@@ -83,17 +83,17 @@ export function UiSelect({
                   <Select.Item
                     key={item.value}
                     value={item.value}
-                    className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm text-[var(--foreground)] outline-none transition hover:bg-[var(--surface-hover)] data-[highlighted]:bg-[var(--surface-hover)] data-[selected]:bg-[var(--primary)]/15 data-[selected]:text-[var(--primary)] data-[selected]:font-semibold"
+                    className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm text-[var(--foreground)] outline-none transition hover:bg-[var(--surface-hover)] data-[highlighted]:bg-[var(--surface-hover)] data-[selected]:bg-[var(--primary)]/15 data-[selected]:text-primary data-[selected]:font-semibold"
                   >
                     <Select.ItemText>{item.label}</Select.ItemText>
-                    <Select.ItemIndicator className="text-[var(--primary)]">
+                    <Select.ItemIndicator className="text-primary">
                       <Check className="h-4 w-4" />
                     </Select.ItemIndicator>
                   </Select.Item>
                 ))}
               </Select.List>
 
-              <Select.ScrollDownArrow className="flex justify-center py-1 text-[var(--muted)]">
+              <Select.ScrollDownArrow className="flex justify-center py-1 text-muted">
                 <ChevronDown className="h-4 w-4" />
               </Select.ScrollDownArrow>
             </Select.Popup>

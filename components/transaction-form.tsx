@@ -60,14 +60,18 @@ const initialActionState: ActionState = {
   ok: false,
 };
 
-export function TransactionForm({ initialCategories, onSuccess }: TransactionFormProps) {
+export function TransactionForm({
+  initialCategories,
+  onSuccess,
+}: TransactionFormProps) {
   const router = useRouter();
   const [actionState, formAction, isPending] = useActionState(
     createTransactionAction,
     initialActionState,
   );
   const [type, setType] = useState<EntityType>("expense");
-  const [categories, setCategories] = useState<CategoryRecord[]>(initialCategories);
+  const [categories, setCategories] =
+    useState<CategoryRecord[]>(initialCategories);
   const [categoryId, setCategoryId] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(todayValue);
@@ -274,16 +278,17 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
   return (
     <form
       action={formAction}
-      className="space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-7 shadow-sm max-w-2xl mx-auto"
+      className="mx-auto max-w-2xl space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm sm:p-7"
     >
       {/* Form Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[var(--border)] pb-4">
+      <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] sm:text-2xl">
             Catat Transaksi
           </h2>
-          <p className="text-xs text-[var(--muted)]">
-            Isi detail transaksi secara manual atau gunakan AI Assistant di bawah.
+          <p className="text-muted text-xs">
+            Isi detail transaksi secara manual atau gunakan AI Assistant di
+            bawah.
           </p>
         </div>
 
@@ -293,13 +298,13 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
             type="button"
             onClick={() => onTypeChange("expense")}
             className={cn(
-              "flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer select-none",
+              "flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 select-none sm:w-fit",
               type === "expense"
                 ? "bg-rose-500 text-white shadow-md"
-                : "text-[var(--muted)] hover:text-[var(--foreground)]",
+                : "text-muted hover:text-[var(--foreground)]",
             )}
           >
-            <TrendingDown className="h-3.5 w-3.5" />
+            <TrendingUp className="h-3.5 w-3.5" />
             <span>Pengeluaran</span>
           </button>
 
@@ -307,13 +312,13 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
             type="button"
             onClick={() => onTypeChange("income")}
             className={cn(
-              "flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer select-none",
+              "flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 select-none sm:w-fit",
               type === "income"
                 ? "bg-emerald-500 text-white shadow-md"
-                : "text-[var(--muted)] hover:text-[var(--foreground)]",
+                : "text-muted hover:text-foreground",
             )}
           >
-            <TrendingUp className="h-3.5 w-3.5" />
+            <TrendingDown className="h-3.5 w-3.5" />
             <span>Pemasukan</span>
           </button>
         </div>
@@ -324,28 +329,28 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
       {/* AI Smart Input Box — Powered by Gemini */}
       <div
         className={cn(
-          "p-4 rounded-2xl border-2 transition-all duration-300 space-y-3",
+          "space-y-3 rounded-2xl border-2 p-4 transition-all duration-300",
           isAiProcessing
-            ? "bg-purple-500/15 border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
-            : "bg-purple-500/10 border-purple-500/30",
+            ? "border-purple-500/50 bg-purple-500/15 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+            : "border-purple-500/30 bg-purple-500/10",
         )}
       >
         {/* Header */}
         <div className="flex items-center justify-between text-purple-600 dark:text-purple-400">
           <div className="flex items-center gap-1.5">
             <Brain className="h-4 w-4" />
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold tracking-wider uppercase">
               AI Assistant
             </span>
           </div>
-          <span className="text-[10px] bg-purple-500/15 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+          <span className="flex items-center gap-1 rounded-full bg-purple-500/15 px-2 py-0.5 text-[10px] font-medium">
             <Sparkles className="h-3 w-3" />
             Gemini AI
           </span>
         </div>
 
         {/* Input + Button */}
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input
             type="text"
             value={aiPrompt}
@@ -358,18 +363,18 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
             }}
             disabled={isAiProcessing}
             placeholder='Cth: "Beli bakso 3 hari lalu 9000" atau "Gaji kemarin 5 juta"'
-            className="flex-1 bg-[var(--surface)] border border-purple-500/30 rounded-xl py-2.5 px-3 text-xs sm:text-sm text-[var(--foreground)] outline-none focus:border-purple-500 transition-colors placeholder:text-purple-400/60 disabled:opacity-60"
+            className="flex-1 rounded-xl border border-purple-500/30 bg-[var(--surface)] px-3 py-2.5 text-xs text-[var(--foreground)] transition-colors outline-none placeholder:text-purple-400/60 focus:border-purple-500 disabled:opacity-60 sm:text-sm"
           />
           <button
             type="button"
             onClick={handleAiProcess}
             disabled={isAiProcessing || !aiPrompt.trim()}
             className={cn(
-              "text-white px-3.5 py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center cursor-pointer shrink-0",
+              "flex shrink-0 cursor-pointer items-center justify-center rounded-xl px-3.5 py-2.5 text-white shadow-md transition-all",
               isAiProcessing
-                ? "bg-purple-700 cursor-wait"
+                ? "cursor-wait bg-purple-700"
                 : "bg-purple-600 hover:bg-purple-700 hover:shadow-lg active:scale-95",
-              !aiPrompt.trim() && "opacity-50 cursor-not-allowed",
+              !aiPrompt.trim() && "cursor-not-allowed opacity-50",
             )}
             title="Proses dengan Gemini AI"
           >
@@ -383,13 +388,15 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
 
         {/* Processing Indicator */}
         {isAiProcessing && (
-          <div className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 animate-pulse">
+          <div className="flex animate-pulse items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
             <div className="flex gap-1">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce [animation-delay:0ms]" />
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce [animation-delay:150ms]" />
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce [animation-delay:300ms]" />
+              <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-purple-500 [animation-delay:0ms]" />
+              <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-purple-500 [animation-delay:150ms]" />
+              <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-purple-500 [animation-delay:300ms]" />
             </div>
-            <span className="font-medium">Gemini sedang menganalisis transaksi...</span>
+            <span className="font-medium">
+              Gemini sedang menganalisis transaksi...
+            </span>
           </div>
         )}
 
@@ -399,10 +406,10 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
             {/* Success / Fallback Message */}
             <div
               className={cn(
-                "flex items-center gap-2 text-xs font-medium rounded-xl px-3 py-2",
+                "flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium",
                 usedFallback
-                  ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
-                  : "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20",
+                  ? "border border-amber-500/20 bg-amber-500/10 text-amber-600"
+                  : "border border-emerald-500/20 bg-emerald-500/10 text-emerald-600",
               )}
             >
               {usedFallback ? (
@@ -416,7 +423,7 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
               {aiConfidence !== null && (
                 <span
                   className={cn(
-                    "ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0",
+                    "ml-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold",
                     confidenceColor,
                   )}
                 >
@@ -427,15 +434,15 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
 
             {/* AI Reasoning */}
             {aiReasoning && !usedFallback && (
-              <div className="flex items-start gap-2 text-[11px] text-purple-600/80 dark:text-purple-400/80 bg-purple-500/5 rounded-lg px-3 py-2 border border-purple-500/10">
-                <Brain className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded-lg border border-purple-500/10 bg-purple-500/5 px-3 py-2 text-[11px] text-purple-600/80 dark:text-purple-400/80">
+                <Brain className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span>{aiReasoning}</span>
               </div>
             )}
 
             {/* Fallback Error Detail */}
             {usedFallback && aiError && (
-              <div className="text-[10px] text-amber-600/70 dark:text-amber-400/70 px-1">
+              <div className="px-1 text-[10px] text-amber-600/70 dark:text-amber-400/70">
                 ⚠️ {aiError}
               </div>
             )}
@@ -445,18 +452,19 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
         {/* Footer Hint */}
         {!isAiProcessing && !aiMessage && (
           <div className="text-[10px] text-purple-600/70 dark:text-purple-400/70">
-            *Ketik deskripsi (cth: &quot;3 hari lalu&quot;, &quot;kemarin&quot;) — AI akan otomatis mengisi nominal, kategori, tanggal, &amp; catatan
+            *Ketik deskripsi (cth: &quot;3 hari lalu&quot;, &quot;kemarin&quot;)
+            — AI akan otomatis mengisi nominal, kategori, tanggal, &amp; catatan
           </div>
         )}
       </div>
 
       {/* Nominal Input */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-[var(--muted)]">
+        <label className="text-muted block text-xs font-semibold">
           Nominal (Rp) <span className="text-rose-500">*</span>
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-sm text-[var(--muted)]">
+          <span className="text-muted absolute top-1/2 left-4 -translate-y-1/2 text-sm font-bold">
             Rp
           </span>
           <UiInput
@@ -468,7 +476,7 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
               setAmount(event.currentTarget.value)
             }
             required
-            className="pl-12 font-bold text-lg text-[var(--foreground)]"
+            className="pl-12 text-lg font-bold text-[var(--foreground)]"
             placeholder="0"
           />
         </div>
@@ -477,11 +485,14 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
       {/* Category & Date Grid */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <div className="flex justify-between items-center">
-            <span className="block text-xs font-semibold text-[var(--muted)]">
+          <div className="flex items-center justify-between">
+            <span className="text-muted block text-xs font-semibold">
               Kategori <span className="text-rose-500">*</span>
             </span>
-            <Link href="/categories" className="text-[11px] font-semibold text-teal-600 hover:underline">
+            <Link
+              href="/categories"
+              className="text-[11px] font-semibold text-teal-600 hover:underline"
+            >
               + Kelola
             </Link>
           </div>
@@ -513,7 +524,7 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
 
       {/* Description Note */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-[var(--muted)]">
+        <label className="text-muted block text-xs font-semibold">
           Keterangan / Catatan
         </label>
         <UiInput
@@ -556,7 +567,7 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
         variant="primary"
         size="lg"
         disabled={isPending}
-        className="w-full gradient-card text-gray-800 font-bold text-base py-3.5 rounded-xl shadow-[0_8px_15px_rgba(163,228,215,0.4)] border-none justify-center"
+        className="gradient-card w-full justify-center rounded-xl border-none py-3.5 text-base font-bold text-gray-800 shadow-[0_8px_15px_rgba(163,228,215,0.4)]"
       >
         <Save className="h-4 w-4" />
         <span>{isPending ? "Simpan..." : "Simpan Transaksi"}</span>

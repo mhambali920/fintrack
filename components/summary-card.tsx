@@ -44,7 +44,7 @@ export function SummaryCard({ label, value, note, tone = "default" }: SummaryCar
     >
       <div>
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted">
             {label}
           </p>
           <div className={cn(
@@ -58,7 +58,7 @@ export function SummaryCard({ label, value, note, tone = "default" }: SummaryCar
           {value}
         </h3>
       </div>
-      <p className="mt-4 text-xs text-[var(--muted)] leading-relaxed border-t border-[var(--border)] pt-3">
+      <p className="mt-4 text-xs text-muted leading-relaxed border-t border-[var(--border)] pt-3">
         {note}
       </p>
     </article>

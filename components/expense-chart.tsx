@@ -108,7 +108,7 @@ export function ExpenseChart({ transactions }: ExpenseChartProps) {
   if (items.length === 0 || totalExpense === 0) {
     return (
       <div className="rounded-3xl bg-[var(--surface)] p-8 border border-[var(--border)] text-center shadow-sm">
-        <p className="text-sm text-[var(--muted)]">Belum ada data pengeluaran bulan ini.</p>
+        <p className="text-sm text-muted">Belum ada data pengeluaran bulan ini.</p>
       </div>
     );
   }
@@ -117,7 +117,7 @@ export function ExpenseChart({ transactions }: ExpenseChartProps) {
     <div className="space-y-6">
       {/* SVG Doughnut Chart Container */}
       <div className="rounded-3xl bg-[var(--surface)] p-6 border border-[var(--border)] shadow-sm relative text-center">
-        <h3 className="text-xs font-semibold text-[var(--muted)] uppercase tracking-wider mb-4">
+        <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-4">
           Proporsi Pengeluaran Bulan Ini
         </h3>
 
@@ -137,7 +137,7 @@ export function ExpenseChart({ transactions }: ExpenseChartProps) {
 
           {/* Donut Center Label */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-[10px] uppercase font-semibold text-[var(--muted)]">Total Out</span>
+            <span className="text-[10px] uppercase font-semibold text-muted">Total Out</span>
             <span className="text-base font-bold text-[var(--foreground)]">{formatRp(totalExpense)}</span>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function ExpenseChart({ transactions }: ExpenseChartProps) {
 
                 <div className="text-right">
                   <span className="text-sm font-bold text-[var(--foreground)]">{formatRp(item.amount)}</span>
-                  <span className="text-xs text-[var(--muted)] ml-2">({percent}%)</span>
+                  <span className="text-xs text-muted ml-2">({percent}%)</span>
                 </div>
               </div>
             );

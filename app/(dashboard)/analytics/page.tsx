@@ -26,7 +26,7 @@ export default async function AnalyticsPage() {
           <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">
             Analisis Pengeluaran
           </h1>
-          <p className="text-xs text-[var(--muted)]">
+          <p className="text-xs text-muted">
             Visualisasi distribusi statistik pengeluaran berdasarkan kategori bulan ini.
           </p>
         </div>

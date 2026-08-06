@@ -69,21 +69,21 @@ export function DashboardShell({
   }, [pathname]);
 
   return (
-    <div className="min-h-screen text-foreground pb-24 lg:pb-0 bg-background">
+    <div className="text-foreground bg-background min-h-screen pb-24 lg:pb-0">
       <div className="mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-4 lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-6 lg:px-6 lg:py-6">
         {/* Desktop Sidebar Navigation */}
         <aside className="glass-panel hidden flex-col justify-between rounded-3xl p-5 lg:sticky lg:top-6 lg:flex lg:h-[calc(100dvh-3rem)]">
           <div className="space-y-6">
             {/* Brand Logo */}
-            <Link href="/" className="flex items-center gap-3 group px-2 py-1">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl gradient-card text-gray-800 shadow-md group-hover:scale-105 transition-transform duration-200">
+            <Link href="/" className="group flex items-center gap-3 px-2 py-1">
+              <div className="gradient-card flex h-10 w-10 items-center justify-center rounded-2xl text-gray-800 shadow-md transition-transform duration-200 group-hover:scale-105">
                 <Wallet className="h-5 w-5" />
               </div>
               <div>
-                <span className="text-xl font-bold tracking-tight text-foreground">
+                <span className="text-foreground text-xl font-bold tracking-tight">
                   FinTrack
                 </span>
-                <span className="block text-[10px] uppercase tracking-widest text-muted font-medium">
+                <span className="text-muted block text-[10px] font-medium tracking-widest uppercase">
                   AI Pro Workspace
                 </span>
               </div>
@@ -100,9 +100,9 @@ export function DashboardShell({
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group",
+                      "group flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                       active
-                        ? "gradient-card text-gray-800 font-bold shadow-md"
+                        ? "gradient-card font-bold text-gray-800 shadow-md"
                         : "text-muted] hover:text-foreground hover:bg-(--surface-hover)",
                     )}
                   >
@@ -125,23 +125,23 @@ export function DashboardShell({
           </div>
 
           {/* User Profile & Footer Controls */}
-          <div className="space-y-4 pt-6 border-t border-border">
-            <div className="flex items-center gap-3 rounded-2xl bg-[var(--surface)] p-3 border border-[var(--border)] shadow-sm">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-card text-gray-800 font-bold text-xs shadow-sm">
+          <div className="border-border space-y-4 border-t pt-6">
+            <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm">
+              <div className="gradient-card flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-gray-800 shadow-sm">
                 {userInitials}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-semibold text-foreground">
+                <p className="text-foreground truncate text-xs font-semibold">
                   {userEmail}
                 </p>
-                <span className="inline-flex items-center gap-1 text-[10px] text-teal-600 font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-teal-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-teal-600">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-500" />
                   Sesi Aktif
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-2 w-full">
+            <div className="flex w-full items-center justify-between gap-2">
               <ThemeToggle
                 showLabel={false}
                 className="w-full justify-around"
@@ -157,14 +157,14 @@ export function DashboardShell({
           {/* Mobile Header Bar */}
           <header className="glass-panel sticky top-3 z-40 flex items-center justify-between rounded-2xl px-4 py-3 shadow-md lg:hidden">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-card text-gray-800 shadow-sm">
+              <div className="gradient-card flex h-9 w-9 items-center justify-center rounded-xl text-gray-800 shadow-sm">
                 <Wallet className="h-4.5 w-4.5" />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary)]">
+                <p className="text-primary text-[10px] font-bold tracking-widest uppercase">
                   FinTrack AI
                 </p>
-                <h1 className="text-base font-bold tracking-tight text-foreground">
+                <h1 className="text-foreground text-base font-bold tracking-tight">
                   {activeLabel}
                 </h1>
               </div>
@@ -176,18 +176,18 @@ export function DashboardShell({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-9 w-9 p-0 rounded-xl"
+                className="h-9 w-9 rounded-xl p-0"
                 onClick={() => setMobileMenuOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={mobileMenuOpen}
               >
-                <Menu className="h-5 w-5 text-foreground" />
+                <Menu className="text-foreground h-5 w-5" />
               </UiButton>
             </div>
           </header>
 
           {/* Page Container */}
-          <main className="glass-panel min-h-[calc(100vh-6rem)] rounded-3xl p-4 sm:p-6 lg:p-8 shadow-sm">
+          <main className="glass-panel min-h-[calc(100vh-6rem)] rounded-3xl p-4 shadow-sm sm:p-6 lg:p-8">
             {children}
           </main>
         </div>
@@ -215,16 +215,14 @@ export function DashboardShell({
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl gradient-card text-gray-800 shadow-sm">
+              <div className="gradient-card flex h-10 w-10 items-center justify-center rounded-2xl text-gray-800 shadow-sm">
                 <Wallet className="h-5 w-5" />
               </div>
               <div>
-                <span className="text-base font-bold text-foreground">
+                <span className="text-foreground text-base font-bold">
                   FinTrack
                 </span>
-                <p className="text-[10px] text-[var(--muted)]">
-                  Navigasi Utama
-                </p>
+                <p className="text-muted text-[10px]">Navigasi Utama</p>
               </div>
             </div>
 
@@ -232,7 +230,7 @@ export function DashboardShell({
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 rounded-xl"
+              className="h-8 w-8 rounded-xl p-0"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Close menu"
             >
@@ -240,15 +238,15 @@ export function DashboardShell({
             </UiButton>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl bg-[var(--surface)] p-3 border border-[var(--border)] shadow-sm">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-card text-gray-800 font-bold text-xs">
+          <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm">
+            <div className="gradient-card flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-gray-800">
               {userInitials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-foreground">
+              <p className="text-foreground truncate text-xs font-semibold">
                 {userEmail}
               </p>
-              <p className="text-[10px] text-[var(--muted)]">Akun Aktif</p>
+              <p className="text-muted text-[10px]">Akun Aktif</p>
             </div>
           </div>
 
@@ -265,8 +263,8 @@ export function DashboardShell({
                   className={cn(
                     "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                     active
-                      ? "gradient-card text-gray-800 font-bold shadow-md"
-                      : "text-[var(--muted)] hover:text-foreground hover:bg-[var(--surface-hover)]",
+                      ? "gradient-card font-bold text-gray-800 shadow-md"
+                      : "text-muted hover:text-foreground hover:bg-[var(--surface-hover)]",
                   )}
                 >
                   <div className="flex items-center gap-3">
@@ -280,24 +278,24 @@ export function DashboardShell({
           </nav>
         </div>
 
-        <div className="space-y-4 pt-4 border-t border-[var(--border)]">
+        <div className="space-y-4 border-t border-[var(--border)] pt-4">
           <SignOutButton />
         </div>
       </aside>
 
       {/* Reference HTML Bottom Nav Bar with Central FAB + Button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[var(--panel)] backdrop-blur-lg border-t border-[var(--border)] pb-safe pt-2 px-6 flex justify-around items-center h-20 shadow-[0_-10px_20px_var(--shadow)] z-40 lg:hidden">
+      <div className="pb-safe fixed right-0 bottom-0 left-0 z-40 flex h-20 items-center justify-around border-t border-[var(--border)] bg-[var(--panel)] px-6 pt-2 shadow-[0_-10px_20px_var(--shadow)] backdrop-blur-lg sm:hidden">
         {/* Beranda Link */}
         <Link
           href="/"
           className={cn(
-            "flex flex-col items-center gap-1 w-16 transition-colors",
+            "flex w-16 flex-col items-center gap-1 transition-colors",
             pathname === "/"
-              ? "text-teal-600 dark:text-teal-400 font-semibold"
-              : "text-[var(--muted)] hover:text-[var(--foreground)] font-medium",
+              ? "font-semibold text-teal-600 dark:text-teal-400"
+              : "text-muted font-medium hover:text-[var(--foreground)]",
           )}
         >
-          <LayoutDashboard className="w-6 h-6" />
+          <LayoutDashboard className="h-6 w-6" />
           <span className="text-[10px]">Beranda</span>
         </Link>
 
@@ -308,13 +306,13 @@ export function DashboardShell({
         <Link
           href="/analytics"
           className={cn(
-            "flex flex-col items-center gap-1 w-16 transition-colors",
+            "flex w-16 flex-col items-center gap-1 transition-colors",
             pathname.startsWith("/analytics")
-              ? "text-teal-600 dark:text-teal-400 font-semibold"
-              : "text-[var(--muted)] hover:text-[var(--foreground)] font-medium",
+              ? "font-semibold text-teal-600 dark:text-teal-400"
+              : "text-muted font-medium hover:text-[var(--foreground)]",
           )}
         >
-          <PieChart className="w-6 h-6" />
+          <PieChart className="h-6 w-6" />
           <span className="text-[10px]">Analisis</span>
         </Link>
       </div>
@@ -323,10 +321,10 @@ export function DashboardShell({
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 gradient-card text-gray-800 rounded-full w-14 h-14 flex items-center justify-center shadow-[0_10px_25px_rgba(163,228,215,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 z-50 border-4 border-[var(--background)] cursor-pointer lg:hidden"
+        className="gradient-card fixed bottom-8 left-1/2 z-50 flex h-14 w-14 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-4 border-[var(--background)] text-gray-800 shadow-[0_10px_25px_rgba(163,228,215,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 sm:hidden"
         title="Catat Transaksi Baru"
       >
-        <Plus className="w-6 h-6" />
+        <Plus className="h-6 w-6" />
       </button>
 
       {/* Transaction Modal trigger */}

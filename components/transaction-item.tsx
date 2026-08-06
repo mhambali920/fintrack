@@ -61,7 +61,7 @@ export function TransactionItem({ transaction, actions }: TransactionItemProps) 
           <p className="truncate text-sm font-medium text-[var(--foreground)]">
             {transaction.description || categoryName}
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[var(--muted)]">
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted">
             <span
               className="inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold border"
               style={{
@@ -72,7 +72,7 @@ export function TransactionItem({ transaction, actions }: TransactionItemProps) 
             >
               {categoryName}
             </span>
-            <span className="flex items-center gap-1 text-[11px] text-[var(--muted)]">
+            <span className="flex items-center gap-1 text-[11px] text-muted">
               <Calendar className="h-3 w-3" />
               {dateFormatter.format(new Date(transaction.date))}
             </span>
