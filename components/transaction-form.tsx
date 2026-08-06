@@ -5,7 +5,9 @@ import {
   useActionState,
   useEffect,
   useMemo,
+  useRef,
   useState,
+  useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -17,6 +19,9 @@ import {
   Save,
   Sparkles,
   Wand2,
+  Brain,
+  Zap,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -26,7 +31,10 @@ import { UiButton } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/input";
 import { UiCombobox } from "@/components/ui/combobox";
 import { DatePickerField } from "@/components/ui/date-picker";
-import { parseNaturalLanguageTransaction } from "@/lib/ai-parser";
+import {
+  parseWithGemini,
+  parseNaturalLanguageTransaction,
+} from "@/lib/ai-parser";
 import { cn } from "@/lib/cn";
 
 type ActionState = {
@@ -70,7 +78,11 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
   // AI Prompt State
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiMessage, setAiMessage] = useState<string | null>(null);
+  const [aiReasoning, setAiReasoning] = useState<string | null>(null);
+  const [aiConfidence, setAiConfidence] = useState<number | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [isAiProcessing, setIsAiProcessing] = useState(false);
+  const [usedFallback, setUsedFallback] = useState(false);
 
   const selectedCategory = useMemo(
     () => categories.find((category) => category.id === categoryId) ?? null,
@@ -85,6 +97,10 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
       setClientError(null);
       setAiPrompt("");
       setAiMessage(null);
+      setAiReasoning(null);
+      setAiConfidence(null);
+      setAiError(null);
+      setUsedFallback(false);
       onSuccess?.();
       router.refresh();
     }
@@ -152,15 +168,19 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
     setType(nextType);
   };
 
-  // AI Assistant Process Handler
-  const handleAiProcess = () => {
-    if (!aiPrompt.trim()) return;
-    setIsAiProcessing(true);
-    setAiMessage(null);
-
-    setTimeout(() => {
-      const parsed = parseNaturalLanguageTransaction(aiPrompt, categories);
-
+  /**
+   * Apply parsed result to form fields, regardless of source (Gemini or fallback).
+   */
+  const applyParsedResult = useCallback(
+    (parsed: {
+      type: EntityType;
+      amount: number;
+      description: string;
+      categoryId: string;
+      confidence: number;
+      aiReasoning?: string;
+      date?: string;
+    }) => {
       if (parsed.type !== type) {
         setType(parsed.type);
       }
@@ -177,10 +197,79 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
         setCategoryId(parsed.categoryId);
       }
 
+      if (parsed.date && /^\d{4}-\d{2}-\d{2}$/.test(parsed.date)) {
+        setDate(parsed.date);
+      }
+
+      setAiConfidence(parsed.confidence);
+      setAiReasoning(parsed.aiReasoning ?? null);
+    },
+    [type],
+  );
+
+  // Guard ref to prevent duplicate calls (React StrictMode dev double-render)
+  const processingRef = useRef(false);
+
+  // AI Assistant Process Handler — Real Gemini API with local fallback
+  const handleAiProcess = useCallback(async () => {
+    if (!aiPrompt.trim() || processingRef.current) return;
+
+    processingRef.current = true;
+    setIsAiProcessing(true);
+    setAiMessage(null);
+    setAiReasoning(null);
+    setAiConfidence(null);
+    setAiError(null);
+    setUsedFallback(false);
+
+    try {
+      // Try real Gemini API first (pass todayValue as reference date)
+      const parsed = await parseWithGemini(aiPrompt, categories, todayValue());
+      applyParsedResult(parsed);
+      setAiMessage("✨ Gemini AI telah menganalisis & mengisi form!");
+      setUsedFallback(false);
+    } catch (error) {
+      // Fallback to local parser
+      console.warn(
+        "[AI Fallback] Gemini unavailable, using local parser:",
+        error instanceof Error ? error.message : error,
+      );
+
+      const parsed = parseNaturalLanguageTransaction(
+        aiPrompt,
+        categories,
+        todayValue(),
+      );
+      applyParsedResult(parsed);
+      setUsedFallback(true);
+      setAiError(
+        error instanceof Error ? error.message : "Gemini API tidak tersedia",
+      );
+      setAiMessage("⚡ Menggunakan parser lokal sebagai fallback");
+    } finally {
       setIsAiProcessing(false);
-      setAiMessage("✨ AI telah otomatis menyusun & mengisi form di bawah!");
-    }, 400);
-  };
+      processingRef.current = false;
+    }
+  }, [aiPrompt, categories, applyParsedResult]);
+
+  // Confidence badge color
+  const confidenceColor =
+    aiConfidence !== null
+      ? aiConfidence >= 0.85
+        ? "text-emerald-600 bg-emerald-500/15"
+        : aiConfidence >= 0.6
+          ? "text-amber-600 bg-amber-500/15"
+          : "text-rose-600 bg-rose-500/15"
+      : "";
+
+  const confidenceLabel =
+    aiConfidence !== null
+      ? aiConfidence >= 0.85
+        ? "Sangat Yakin"
+        : aiConfidence >= 0.6
+          ? "Cukup Yakin"
+          : "Kurang Yakin"
+      : "";
 
   return (
     <form
@@ -232,16 +321,30 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
 
       <input type="hidden" name="type" value={type} />
 
-      {/* AI Smart Input Box (As seen in Reference UI_Pencatatan_Keuangan_AI_CRUD.html) */}
-      <div className="p-4 rounded-2xl bg-purple-500/10 border-2 border-purple-500/30 ai-input-focus transition-all space-y-2">
+      {/* AI Smart Input Box — Powered by Gemini */}
+      <div
+        className={cn(
+          "p-4 rounded-2xl border-2 transition-all duration-300 space-y-3",
+          isAiProcessing
+            ? "bg-purple-500/15 border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+            : "bg-purple-500/10 border-purple-500/30",
+        )}
+      >
+        {/* Header */}
         <div className="flex items-center justify-between text-purple-600 dark:text-purple-400">
           <div className="flex items-center gap-1.5">
-            <Sparkles className="h-4 w-4" />
-            <span className="text-xs font-bold uppercase tracking-wider">AI Assistant</span>
+            <Brain className="h-4 w-4" />
+            <span className="text-xs font-bold uppercase tracking-wider">
+              AI Assistant
+            </span>
           </div>
-          <span className="text-[10px] bg-purple-500/15 px-2 py-0.5 rounded-full font-medium">Smart NLP</span>
+          <span className="text-[10px] bg-purple-500/15 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+            <Sparkles className="h-3 w-3" />
+            Gemini AI
+          </span>
         </div>
 
+        {/* Input + Button */}
         <div className="flex gap-2">
           <input
             type="text"
@@ -253,24 +356,98 @@ export function TransactionForm({ initialCategories, onSuccess }: TransactionFor
                 handleAiProcess();
               }
             }}
-            placeholder="Cth: Beli domain bogordev 150 ribu"
-            className="flex-1 bg-[var(--surface)] border border-purple-500/30 rounded-xl py-2 px-3 text-xs sm:text-sm text-[var(--foreground)] outline-none focus:border-purple-500 transition-colors placeholder:text-purple-400/70"
+            disabled={isAiProcessing}
+            placeholder='Cth: "Beli bakso 3 hari lalu 9000" atau "Gaji kemarin 5 juta"'
+            className="flex-1 bg-[var(--surface)] border border-purple-500/30 rounded-xl py-2.5 px-3 text-xs sm:text-sm text-[var(--foreground)] outline-none focus:border-purple-500 transition-colors placeholder:text-purple-400/60 disabled:opacity-60"
           />
           <button
             type="button"
             onClick={handleAiProcess}
-            disabled={isAiProcessing}
-            className="bg-purple-600 text-white px-3.5 py-2 rounded-xl hover:bg-purple-700 transition-colors shadow-md flex items-center justify-center cursor-pointer shrink-0"
-            title="Proses dengan AI"
+            disabled={isAiProcessing || !aiPrompt.trim()}
+            className={cn(
+              "text-white px-3.5 py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center cursor-pointer shrink-0",
+              isAiProcessing
+                ? "bg-purple-700 cursor-wait"
+                : "bg-purple-600 hover:bg-purple-700 hover:shadow-lg active:scale-95",
+              !aiPrompt.trim() && "opacity-50 cursor-not-allowed",
+            )}
+            title="Proses dengan Gemini AI"
           >
-            <Wand2 className="h-4 w-4" />
+            {isAiProcessing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Wand2 className="h-4 w-4" />
+            )}
           </button>
         </div>
 
-        <div className="flex items-center justify-between text-[10px] text-purple-600/80 dark:text-purple-400/80">
-          <span>*AI akan otomatis mengisi nominal, kategori, & catatan di bawah</span>
-          {aiMessage && <span className="font-semibold text-emerald-600">{aiMessage}</span>}
-        </div>
+        {/* Processing Indicator */}
+        {isAiProcessing && (
+          <div className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 animate-pulse">
+            <div className="flex gap-1">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce [animation-delay:0ms]" />
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce [animation-delay:150ms]" />
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce [animation-delay:300ms]" />
+            </div>
+            <span className="font-medium">Gemini sedang menganalisis transaksi...</span>
+          </div>
+        )}
+
+        {/* AI Result Feedback */}
+        {!isAiProcessing && aiMessage && (
+          <div className="space-y-2">
+            {/* Success / Fallback Message */}
+            <div
+              className={cn(
+                "flex items-center gap-2 text-xs font-medium rounded-xl px-3 py-2",
+                usedFallback
+                  ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                  : "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20",
+              )}
+            >
+              {usedFallback ? (
+                <Zap className="h-3.5 w-3.5 shrink-0" />
+              ) : (
+                <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+              )}
+              <span>{aiMessage}</span>
+
+              {/* Confidence Badge */}
+              {aiConfidence !== null && (
+                <span
+                  className={cn(
+                    "ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0",
+                    confidenceColor,
+                  )}
+                >
+                  {Math.round(aiConfidence * 100)}% — {confidenceLabel}
+                </span>
+              )}
+            </div>
+
+            {/* AI Reasoning */}
+            {aiReasoning && !usedFallback && (
+              <div className="flex items-start gap-2 text-[11px] text-purple-600/80 dark:text-purple-400/80 bg-purple-500/5 rounded-lg px-3 py-2 border border-purple-500/10">
+                <Brain className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                <span>{aiReasoning}</span>
+              </div>
+            )}
+
+            {/* Fallback Error Detail */}
+            {usedFallback && aiError && (
+              <div className="text-[10px] text-amber-600/70 dark:text-amber-400/70 px-1">
+                ⚠️ {aiError}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Footer Hint */}
+        {!isAiProcessing && !aiMessage && (
+          <div className="text-[10px] text-purple-600/70 dark:text-purple-400/70">
+            *Ketik deskripsi (cth: &quot;3 hari lalu&quot;, &quot;kemarin&quot;) — AI akan otomatis mengisi nominal, kategori, tanggal, &amp; catatan
+          </div>
+        )}
       </div>
 
       {/* Nominal Input */}
