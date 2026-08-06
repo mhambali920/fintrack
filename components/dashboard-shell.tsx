@@ -286,7 +286,7 @@ export function DashboardShell({
       </aside>
 
       {/* Reference HTML Bottom Nav Bar with Central FAB + Button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-t border-[var(--border)] pb-safe pt-2 px-6 flex justify-between items-center h-20 shadow-[0_-10px_20px_rgba(0,0,0,0.03)] z-40 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--panel)] backdrop-blur-lg border-t border-[var(--border)] pb-safe pt-2 px-6 flex justify-around items-center h-20 shadow-[0_-10px_20px_var(--shadow)] z-40 lg:hidden">
         {/* Beranda Link */}
         <Link
           href="/"
@@ -294,7 +294,7 @@ export function DashboardShell({
             "flex flex-col items-center gap-1 w-16 transition-colors",
             pathname === "/"
               ? "text-teal-600 dark:text-teal-400 font-semibold"
-              : "text-gray-400 hover:text-teal-600 font-medium",
+              : "text-[var(--muted)] hover:text-[var(--foreground)] font-medium",
           )}
         >
           <LayoutDashboard className="w-6 h-6" />
@@ -311,7 +311,7 @@ export function DashboardShell({
             "flex flex-col items-center gap-1 w-16 transition-colors",
             pathname.startsWith("/analytics")
               ? "text-teal-600 dark:text-teal-400 font-semibold"
-              : "text-gray-400 hover:text-teal-600 font-medium",
+              : "text-[var(--muted)] hover:text-[var(--foreground)] font-medium",
           )}
         >
           <PieChart className="w-6 h-6" />
@@ -323,7 +323,7 @@ export function DashboardShell({
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 gradient-card text-gray-800 rounded-full w-14 h-14 flex items-center justify-center shadow-[0_10px_25px_rgba(163,228,215,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 z-50 border-4 border-[#F8F9FA] dark:border-gray-900 cursor-pointer lg:hidden"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 gradient-card text-gray-800 rounded-full w-14 h-14 flex items-center justify-center shadow-[0_10px_25px_rgba(163,228,215,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 z-50 border-4 border-[var(--background)] cursor-pointer lg:hidden"
         title="Catat Transaksi Baru"
       >
         <Plus className="w-6 h-6" />

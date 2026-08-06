@@ -58,6 +58,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setResolvedTheme(nextResolvedTheme);
       document.documentElement.dataset.theme = nextResolvedTheme;
       document.documentElement.dataset.themePreference = theme;
+      if (nextResolvedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     };
 
     applyTheme();
