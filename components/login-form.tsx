@@ -2,7 +2,13 @@
 
 import { useMemo, useState, useTransition, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { KeyRound, Mail, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  KeyRound,
+  Mail,
+  ArrowRight,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { UiButton } from "@/components/ui/button";
 import { UiInput } from "@/components/ui/input";
@@ -35,7 +41,10 @@ export function LoginForm() {
         const { error } = await supabase.auth.signInWithOtp({
           email,
           options: {
-            emailRedirectTo: new URL(nextPath, window.location.origin).toString(),
+            emailRedirectTo: new URL(
+              nextPath,
+              window.location.origin,
+            ).toString(),
           },
         });
 
@@ -75,11 +84,8 @@ export function LoginForm() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
-          Masuk ke FinTrack
+          Login
         </h2>
-        <p className="mt-1.5 text-xs sm:text-sm text-[var(--muted)]">
-          Kelola transaksi dan pantau finansialmu dengan mudah.
-        </p>
       </div>
 
       {/* Mode Switcher Tabs */}
@@ -88,9 +94,9 @@ export function LoginForm() {
           type="button"
           onClick={() => setMode("password")}
           className={cn(
-            "flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer select-none",
+            "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-shadow duration-200 select-none",
             mode === "password"
-              ? "gradient-primary text-white shadow-md"
+              ? "gradient-primary border border-gray-100 shadow-md dark:border-gray-800/30"
               : "text-[var(--muted)] hover:text-[var(--foreground)]",
           )}
         >
@@ -102,9 +108,9 @@ export function LoginForm() {
           type="button"
           onClick={() => setMode("magic-link")}
           className={cn(
-            "flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer select-none",
+            "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-shadow duration-200 select-none",
             mode === "magic-link"
-              ? "gradient-primary text-white shadow-md"
+              ? "gradient-primary border border-gray-100 shadow-md dark:border-gray-800/30"
               : "text-[var(--muted)] hover:text-[var(--foreground)]",
           )}
         >
@@ -144,7 +150,8 @@ export function LoginForm() {
           </label>
         ) : (
           <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-3.5 text-xs text-[var(--muted)]">
-            Mode Magic Link akan mengirimkan link sekali pakai ke inbox email kamu tanpa perlu password.
+            Mode Magic Link akan mengirimkan link sekali pakai ke inbox email
+            kamu tanpa perlu password.
           </div>
         )}
 
@@ -155,17 +162,23 @@ export function LoginForm() {
           disabled={isPending}
           className="w-full justify-center"
         >
-          <span>{isPending ? "Memproses..." : mode === "magic-link" ? "Kirim Magic Link" : "Lanjutkan"}</span>
+          <span>
+            {isPending
+              ? "Memproses..."
+              : mode === "magic-link"
+                ? "Kirim Magic Link"
+                : "Lanjutkan"}
+          </span>
           <ArrowRight className="h-4 w-4" />
         </UiButton>
       </form>
 
       {message ? (
-        <div className="flex items-start gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs text-[var(--muted)] leading-relaxed shadow-sm">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs leading-relaxed text-[var(--muted)] shadow-sm">
           {message.includes("Gagal") || message.includes("Error") ? (
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-500 mt-0.5" />
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
           ) : (
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
           )}
           <span>{message}</span>
         </div>

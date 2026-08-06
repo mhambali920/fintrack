@@ -11,7 +11,7 @@ type UiButtonProps = ComponentPropsWithoutRef<typeof Button> & {
 
 const variantClasses: Record<NonNullable<UiButtonProps["variant"]>, string> = {
   primary:
-    "gradient-primary text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:opacity-95 active:scale-[0.98]",
+    "gradient-primary border border-gray-200 dark:border-gray-900 dark:text-white shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:opacity-95 active:scale-[0.98]",
   secondary:
     "bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--surface-hover)] hover:border-[var(--border-strong)] active:scale-[0.98]",
   outline:
@@ -19,7 +19,7 @@ const variantClasses: Record<NonNullable<UiButtonProps["variant"]>, string> = {
   ghost:
     "bg-transparent text-[var(--foreground)] hover:bg-[var(--surface-hover)] active:scale-[0.98]",
   danger:
-    "bg-rose-600 text-white shadow-lg shadow-rose-500/20 hover:bg-rose-700 active:scale-[0.98]",
+    "bg-rose-600 text-white shadow-md shadow-rose-500/20 hover:bg-rose-700 active:scale-[0.98]",
 };
 
 const sizeClasses: Record<NonNullable<UiButtonProps["size"]>, string> = {
@@ -41,7 +41,7 @@ export function UiButton({
       focusableWhenDisabled={focusableWhenDisabled}
       className={(state) =>
         cn(
-          "inline-flex items-center justify-center font-semibold transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 select-none",
+          "inline-flex cursor-pointer items-center justify-center font-semibold transition-all duration-200 select-none disabled:cursor-not-allowed disabled:opacity-50",
           variantClasses[variant],
           sizeClasses[size],
           typeof className === "function" ? className(state) : className,
