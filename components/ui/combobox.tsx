@@ -98,8 +98,8 @@ export function UiCombobox({
         <input type="hidden" name={name} value={selectedValue} />
 
         <Combobox.Portal>
-          <Combobox.Positioner sideOffset={6} className="z-[70]">
-            <Combobox.Popup className="w-[min(calc(100vw-2rem),var(--base-ui-anchor-width))] overflow-hidden rounded-xl border border-[var(--border-strong)] bg-[var(--panel)] p-2 shadow-2xl backdrop-blur-xl">
+          <Combobox.Positioner sideOffset={6} className="z-[200]">
+            <Combobox.Popup className="z-[200] w-[min(calc(100vw-2rem),var(--base-ui-anchor-width))] overflow-hidden rounded-xl border border-[var(--border-strong)] bg-[var(--surface)] p-2 shadow-2xl backdrop-blur-2xl">
               <div className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
                 <Search className="h-4 w-4 shrink-0 text-[var(--muted)]" />
                 <Combobox.Input
