@@ -5,6 +5,7 @@ import type { TransactionRecord } from "@/lib/finance";
 
 type ExpenseChartProps = {
   transactions: TransactionRecord[];
+  periodLabel?: string;
 };
 
 function formatRp(val: number) {
@@ -32,7 +33,7 @@ function getCategoryColor(color: string | null, index: number) {
   return defaultColors[index % defaultColors.length];
 }
 
-export function ExpenseChart({ transactions }: ExpenseChartProps) {
+export function ExpenseChart({ transactions, periodLabel }: ExpenseChartProps) {
   const expenseData = useMemo(() => {
     const expenses = transactions.filter((t) => t.type === "expense");
     const map = new Map<string, { label: string; amount: number; color: string }>();
@@ -108,7 +109,9 @@ export function ExpenseChart({ transactions }: ExpenseChartProps) {
   if (items.length === 0 || totalExpense === 0) {
     return (
       <div className="rounded-3xl bg-[var(--surface)] p-8 border border-[var(--border)] text-center shadow-sm">
-        <p className="text-sm text-muted">Belum ada data pengeluaran bulan ini.</p>
+        <p className="text-sm text-muted">
+          Belum ada data pengeluaran {periodLabel ? `pada ${periodLabel}` : "bulan ini"}.
+        </p>
       </div>
     );
   }
@@ -118,7 +121,7 @@ export function ExpenseChart({ transactions }: ExpenseChartProps) {
       {/* SVG Doughnut Chart Container */}
       <div className="rounded-3xl bg-[var(--surface)] p-6 border border-[var(--border)] shadow-sm relative text-center">
         <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-4">
-          Proporsi Pengeluaran Bulan Ini
+          Proporsi Pengeluaran {periodLabel ? periodLabel : "Bulan Ini"}
         </h3>
 
         <div className="relative h-56 w-56 mx-auto flex items-center justify-center">

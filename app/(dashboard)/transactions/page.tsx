@@ -1,3 +1,4 @@
+import Form from "next/form";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -127,8 +128,8 @@ export default async function TransactionsPage({
       </div>
 
       {/* Filter Form Card */}
-      <form
-        method="get"
+      <Form
+        action="/transactions"
         className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm"
       >
         <div className="text-muted flex items-center gap-2 border-b border-[var(--border)] pb-3 text-xs font-bold tracking-wider uppercase">
@@ -166,7 +167,7 @@ export default async function TransactionsPage({
             </UiButton>
           </div>
         </div>
-      </form>
+      </Form>
 
       {/* Transactions List */}
       {result.items.length > 0 ? (
